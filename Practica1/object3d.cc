@@ -56,8 +56,8 @@ void _object3D::draw_fill()
 
 void _object3D::draw_chess()
 {
+  glPolygonMode(GL_FRONT_AND_BACK,GL_FILL);
   glColor3fv((GLfloat *) &BLACK);
-  glPolygonMode(GL_FRONT_AND_BACK,GL_LINE);
   glBegin(GL_TRIANGLES);
   for (unsigned int i=0;i<Triangles.size();i+=2){
     glVertex3fv((GLfloat *) &Vertices[Triangles[i]._0]);
