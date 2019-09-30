@@ -33,7 +33,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
 	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 
 	glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
-   glEnable (GL_CULL_FACE); // no dibujar las caras traseras
+  glEnable (GL_CULL_FACE);    // no dibujar las caras traseras
 
 	Width  = UI_window_width/10;
 	Height = UI_window_height/10;
@@ -56,9 +56,7 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
-    if(objDibujo == 1){
-      cubo->draw(false, false);
-    }
+    cubo->draw(modoDiferido, chess, visual);
     
 }
 
@@ -75,6 +73,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir=false;
+
    switch( toupper(tecla) )
    {
       case 'Q' :
@@ -100,7 +99,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'C' :
          if (modoMenu == SELOBJETO){
             objDibujo = 1;
-            dibujar();
          }
          break ;
       
@@ -109,6 +107,43 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             objDibujo = 2;
          }
          break;
+
+      case 'P' :
+        if (modoMenu == SELVISUALIZACION){
+          visual = GL_POINT;
+        }
+        break;
+
+      case 'L' :
+        if (modoMenu == SELVISUALIZACION){
+          visual = GL_LINE;
+        }
+        break;
+
+      case 'S' :
+        if (modoMenu == SELVISUALIZACION){
+          visual = GL_FILL;
+        }
+        break;
+
+      case 'A' :
+        if (modoMenu == SELVISUALIZACION){
+          chess = true;
+        }
+        break;
+
+      case '1' :
+        if (modoMenu == SELDIBUJADO){
+          modoDiferido = false;
+        }
+        break;
+
+      case '2' :
+        if (modoDiferido == SELDIBUJADO){
+          modoDiferido = true;
+        }
+        break;
+
             
    }
    return salir;

@@ -43,6 +43,15 @@ class Escena
    // 2: Tetraedro
    int objDibujo;
 
+   // ModoDiferido
+   bool modoDiferido = false;
+
+   // Modo Ajedrez
+   bool chess = false;
+
+   // Modo de Visualización
+   GLenum visual = GL_FILL;
+
    
    public:
 

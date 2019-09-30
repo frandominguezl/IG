@@ -34,7 +34,8 @@ class Malla3D
    // modoDiferido == true -> se llama a draw_ModoDiferido()
    // modoDiferido == false -> se llama a draw_ModoInmediato()
    // chess == true -> dibuja en modo ajedrez
-   void draw(bool modoDiferido, bool chess) ;
+   // modo visualizacion
+   void draw(bool modoDiferido, bool chess, GLenum visual) ;
 
    protected:
 

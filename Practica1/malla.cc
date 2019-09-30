@@ -49,9 +49,21 @@ void Malla3D::draw_ModoDiferido()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(bool modoDiferido, bool chess)
+void Malla3D::draw(bool modoDiferido, bool chess, GLenum visual)
 {
-   glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+  switch(visual){
+    case GL_FILL:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+      break;
+
+    case GL_POINT:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+      break;
+
+    case GL_LINE:
+      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+      break;
+  }
    
    if(modoDiferido) {
       draw_ModoDiferido();
