@@ -19,6 +19,7 @@ Escena::Escena()
     ejes.changeAxisSize( 5000 );
 
     cubo = new Cubo();
+    tetraedro = new Tetraedro();
 
 }
 
@@ -56,12 +57,20 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
-    if(chess){
+    if(chess && objDibujo == 1){
        cubo->modoChess();
+    }
+
+    else if(chess && objDibujo == 2){
+      tetraedro->modoChess();
     }
 
     if(objDibujo == 1){
        cubo->draw(modoDiferido, visual);
+    }
+
+    else if(objDibujo == 2){
+      tetraedro->draw(modoDiferido, visual);
     }
 
     else{
