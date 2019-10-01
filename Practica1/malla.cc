@@ -15,6 +15,7 @@ void Malla3D::draw_ModoInmediato()
   glVertexPointer(3, GL_FLOAT, 0, v.data());
   glEnableClientState(GL_COLOR_ARRAY);
   glColorPointer(3, GL_FLOAT, 0, c.data());
+  glShadeModel(GL_FLAT);
   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
   glDisableClientState(GL_COLOR_ARRAY);
   glDisableClientState(GL_VERTEX_ARRAY);
@@ -41,6 +42,7 @@ void Malla3D::draw_ModoDiferido()
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
    glBindBuffer(GL_ARRAY_BUFFER, CrearVBO(GL_ARRAY_BUFFER, v.size(), v.data()));
+   glShadeModel(GL_FLAT);
    glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glDisableClientState(GL_VERTEX_ARRAY);
@@ -49,7 +51,7 @@ void Malla3D::draw_ModoDiferido()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(bool modoDiferido, bool chess, GLenum visual)
+void Malla3D::draw(bool modoDiferido, GLenum visual)
 {
   switch(visual){
     case GL_FILL:

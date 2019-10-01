@@ -56,7 +56,19 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
-    cubo->draw(modoDiferido, chess, visual);
+    if(chess){
+       cubo->modoChess();
+    }
+
+    if(objDibujo == 1){
+       cubo->draw(modoDiferido, visual);
+    }
+
+    else{
+       glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+       ejes.draw();
+    }
+    
     
 }
 
@@ -99,6 +111,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case 'C' :
          if (modoMenu == SELOBJETO){
             objDibujo = 1;
+         }
+
+         else if (modoMenu == SELOBJETO && objDibujo == 1){
+            objDibujo = 0;
          }
          break ;
       

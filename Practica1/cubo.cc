@@ -37,7 +37,7 @@ Cubo::Cubo(float lado)
    f.push_back(t6);
 
    // Cara izquierda
-   Tupla3i t7(0, 4, 7), t8(0, 7, 3);
+   Tupla3i t7(0, 7, 3), t8(0, 4, 7);
    f.push_back(t7);
    f.push_back(t8);
 
@@ -47,7 +47,7 @@ Cubo::Cubo(float lado)
    f.push_back(t10);
 
    // Cara de abajo
-   Tupla3i t11(0, 1, 5), t12(0, 5, 4);
+   Tupla3i t11(0, 1, 4), t12(5, 4, 1);
    f.push_back(t11);
    f.push_back(t12);
 
@@ -68,3 +68,17 @@ Cubo::Cubo(float lado)
 
 }
 
+void Cubo::modoChess()
+{
+        c.clear();
+        Tupla3f c1(0.0, 0.0, 0.0), c2(255, 0.0, 0.0), c3(255, 0.0, 0.0), c4(255, 0.0, 0.0),
+                c5(255, 0.0, 0.0), c6(255, 0.0, 0.0), c7(0.0, 0.0, 0.0), c8(255, 0.0, 0.0);
+        c.push_back(c1);
+        c.push_back(c2);
+        c.push_back(c3);
+        c.push_back(c4);
+        c.push_back(c5);
+        c.push_back(c6);
+        c.push_back(c7);
+        c.push_back(c8);
+}
