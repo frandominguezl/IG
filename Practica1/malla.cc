@@ -21,6 +21,42 @@ void Malla3D::draw_ModoInmediato()
   glDisableClientState(GL_VERTEX_ARRAY);
 
 }
+
+void Malla3D::draw_Chess()
+{
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glVertexPointer(3, GL_FLOAT, 0, v.data());
+   glEnableClientState(GL_COLOR_ARRAY);
+   
+   for(int i=0; i<f.size(); i+=2){
+      fimpar.push_back(f[i]);
+      fpar.push_back(f[i+1]);
+   }
+
+   glShadeModel(GL_FLAT);
+
+   cimpar.resize(c.size());
+   cpar.resize(c.size());
+
+   for(int i=0; i<cpar.size(); ++i){
+      cpar[i][0] = (200.0);
+      cpar[i][1] = (0.0);
+      cpar[i][2] = (0.0);
+   }
+
+   for(int i=0; i<cimpar.size();++i){
+      cimpar[i](0) = (0.0);
+      cimpar[i](1) = (0.0);
+      cimpar[i](2) = (0.0);
+   }
+
+   glColorPointer(3, GL_FLOAT, 0, cpar.data());
+   glDrawElements(GL_TRIANGLES, 3*fpar.size(), GL_UNSIGNED_INT, fpar.data());
+   glColorPointer(3, GL_FLOAT, 0, cimpar.data());
+   glDrawElements(GL_TRIANGLES, 3*fimpar.size(), GL_UNSIGNED_INT, fimpar.data());
+   glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_VERTEX_ARRAY);
+}
 // -----------------------------------------------------------------------------
 // Visualización en modo diferido con 'glDrawElements' (usando VBOs)
 
@@ -37,11 +73,16 @@ GLuint Malla3D::CrearVBO(GLuint tipo_vbo, GLuint tam_bytes, GLvoid* puntero_ram)
 
 void Malla3D::draw_ModoDiferido()
 {
-   glBindBuffer(GL_ARRAY_BUFFER, CrearVBO(GL_ARRAY_BUFFER, v.size(), v.data()));
+  if (vbo_v == 0 && vbo_f == 0){
+    vbo_v = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(float)*v.size(), v.data());
+    vbo_f = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(int)*f.size(), f.data()); 
+  }
+
+   glBindBuffer(GL_ARRAY_BUFFER, vbo_v);
    glVertexPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
-   glBindBuffer(GL_ARRAY_BUFFER, CrearVBO(GL_ARRAY_BUFFER, v.size(), v.data()));
+   glBindBuffer(GL_ARRAY_BUFFER, vbo_f);
    glShadeModel(GL_FLAT);
    glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
    glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -51,7 +92,7 @@ void Malla3D::draw_ModoDiferido()
 // Función de visualización de la malla,
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
-void Malla3D::draw(bool modoDiferido, GLenum visual)
+void Malla3D::draw(bool modoDiferido, GLenum visual, bool chess)
 {
   switch(visual){
     case GL_FILL:
@@ -65,6 +106,10 @@ void Malla3D::draw(bool modoDiferido, GLenum visual)
     case GL_LINE:
       glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
       break;
+  }
+
+  if(chess){
+    draw_Chess();
   }
    
    if(modoDiferido) {

@@ -29,13 +29,3 @@ Tetraedro::Tetraedro()
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
 
 }
-
-void Tetraedro::modoChess()
-{
-	c.clear();
-	Tupla3f c1(0.0, 0.0, 0.0), c2(255, 0.0, 0.0), c3(0.0, 0.0, 0.0), c4(255, 0.0, 0.0);
-   	c.push_back(c1);
-   	c.push_back(c2);
-   	c.push_back(c3);
-   	c.push_back(c4);
-}

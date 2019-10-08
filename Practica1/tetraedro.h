@@ -25,7 +25,6 @@ class Tetraedro: public Malla3D
 {
    public:
       Tetraedro();
-      void modoChess();
 } ;
 
 
