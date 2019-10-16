@@ -21,7 +21,7 @@ Cubo::Cubo(float lado)
    v.push_back(v8);
 
    // inicializar la tabla de caras o triángulos:
-   // Cara frontal
+   // Cara tal
    Tupla3i t1(0, 2, 1), t2(0, 3, 2);
    // Cara final
    Tupla3i t3(5, 7, 4), t4(7, 5, 6);
@@ -30,7 +30,7 @@ Cubo::Cubo(float lado)
    // Cara izquierda
    Tupla3i t7(0, 4, 3), t8(4, 7, 3);
    // Cara de arriba
-   Tupla3i t9(2, 3, 6), t10(3, 7, 6);
+   Tupla3i t9(2, 3, 7), t10(7, 6, 2);
    // Cara de abajo
    Tupla3i t11(0, 1, 4), t12(5, 4, 1);
 

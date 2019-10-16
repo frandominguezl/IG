@@ -22,6 +22,17 @@ void Malla3D::draw_ModoInmediato()
 
 }
 
+void Malla3D::cambiarColor(float R, float G, float B)
+{
+   // Vaciamos el vector de colores
+   c.clear();
+
+   for(int i = 0; i < v.size(); i++){
+      Tupla3f color(R, G, B);
+      c.push_back(color);
+   }
+}
+
 void Malla3D::draw_Chess()
 {
    glEnableClientState(GL_VERTEX_ARRAY);
