@@ -18,6 +18,8 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
+    // Llamamos los PLY
+    ply1 = new ObjPLY("plys/ant.ply");
     cubo = new Cubo();
     tetraedro = new Tetraedro();
 
@@ -57,6 +59,7 @@ void Escena::dibujar()
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
     ejes.draw();
+    ply1->draw(modoDiferido, visual, chess);
     if(objDibujo == 1){
        cubo->draw(modoDiferido, visual, chess);
     }
