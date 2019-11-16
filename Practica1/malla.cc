@@ -163,6 +163,12 @@ void Malla3D::draw_ModoDiferido(int modoDibujado)
 
 void Malla3D::draw(int modoDibujado, bool puntos, bool lineas, bool solido)
 {
+   mat->aplicar();
+
+   if(nv.empty()){
+      calcular_normales();
+   }
+   
    if(puntos){
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
@@ -225,4 +231,10 @@ void Malla3D::calcular_normales()
     nv[f[i](1)] = (nv[f[i](1)] + nc[i]).normalized();
     nv[f[i](2)] = (nv[f[i](2)] + nc[i]).normalized();
   }
+}
+
+// Función para establecer el material
+void Malla3D::setMaterial(Material m)
+{
+  mat = new Material(m);
 }

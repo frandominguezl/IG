@@ -257,36 +257,42 @@ void ObjRevolucion::draw_Chess(bool tapas)
 
 void ObjRevolucion::draw(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas)
 {
-   if(puntos){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
+    mat->aplicar();
 
-      switch(modoDibujado)
-      {
-         case 1: draw_ModoInmediato(1, tapas); break;
-         case 2: draw_ModoDiferido(1, tapas); break;
-         case 3: draw_Chess(tapas); break;
-      }
-   }
+    if(nv.empty()){
+        calcular_normales();
+    }
 
-   if(lineas){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    if(puntos){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
 
-      switch(modoDibujado)
-      {
-         case 1: draw_ModoInmediato(2, tapas); break;
-         case 2: draw_ModoDiferido(2, tapas); break;
-         case 3: draw_Chess(tapas); break;
-      }
-   }
+        switch(modoDibujado)
+        {
+            case 1: draw_ModoInmediato(1, tapas); break;
+            case 2: draw_ModoDiferido(1, tapas); break;
+            case 3: draw_Chess(tapas); break;
+        }
+    }
 
-   if(solido){
-      glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    if(lineas){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
-      switch(modoDibujado)
-      {
-         case 1: draw_ModoInmediato(3, tapas); break;
-         case 2: draw_ModoDiferido(3, tapas); break;
-         case 3: draw_Chess(tapas); break;
-      }
-   }
+        switch(modoDibujado)
+        {
+            case 1: draw_ModoInmediato(2, tapas); break;
+            case 2: draw_ModoDiferido(2, tapas); break;
+            case 3: draw_Chess(tapas); break;
+        }
+    }
+
+    if(solido){
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+        switch(modoDibujado)
+        {
+            case 1: draw_ModoInmediato(3, tapas); break;
+            case 2: draw_ModoDiferido(3, tapas); break;
+            case 3: draw_Chess(tapas); break;
+        }
+    }
 }

@@ -11,6 +11,7 @@
 #define MALLA3D_H_INCLUDED
 
 #include "aux.h"
+#include "material.h"
 
 // *****************************************************************************
 //
@@ -43,6 +44,9 @@ class Malla3D
    // bool solido = Activa/Desactiva la visualización en solido
    void draw(int modoDibujado, bool puntos, bool lineas, bool solido);
 
+   // Establecer material
+   void setMaterial(Material m);
+
    protected:
 
    // Visualización en Modo Diferido (VBO)
@@ -56,6 +60,9 @@ class Malla3D
    std::vector<Tupla3f> cPuntos, cLineas; // Coloeres para diferentes modos de visualización
    std::vector<Tupla3f> nv; // Vector de normales de los vértices
    std::vector<Tupla3f> nc; // Vector de normales de las caras
+
+   // Material
+   Material * mat = nullptr;
 
    // Variables para visualización en Modo Diferido
    GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0;

@@ -10,27 +10,48 @@
 
 Escena::Escena()
 {
-    Front_plane       = 50.0;
-    Back_plane        = 2000.0;
-    Observer_distance = 4*Front_plane;
-    Observer_angle_x  = 0.0 ;
-    Observer_angle_y  = 0.0 ;
+   Front_plane       = 50.0;
+   Back_plane        = 2000.0;
+   Observer_distance = 4*Front_plane;
+   Observer_angle_x  = 0.0 ;
+   Observer_angle_y  = 0.0 ;
 
-    ejes.changeAxisSize( 5000 );
+   ejes.changeAxisSize( 5000 );
 
-    // Cargamos los bjetos PLY
-    ply1 = new ObjPLY("plys/ant.ply");
+   // Cargamos los bjetos PLY
+   ply1 = new ObjPLY("plys/ant.ply");
 
-    // Cargamos objetos de revolución
-    peon1 = new ObjRevolucion("plys/peon.ply", 50);
-    cilindro1 = new Cilindro(50, 50, 10);
-    cono1 = new Cono(50, 30, 10);
-    esfera1 = new Esfera(50, 20, 10);
+   // Cargamos objetos de revolución
+   peon1 = new ObjRevolucion("plys/peon.ply", 50);
+   peon2 = new ObjRevolucion("plys/peon.ply", 50);
+   cilindro1 = new Cilindro(50, 50, 10);
+   cono1 = new Cono(50, 30, 10);
+   esfera1 = new Esfera(50, 20, 10);
 
-    // Cargamos los objetos básicos
-    cubo = new Cubo();
-    tetraedro = new Tetraedro();
+   // Cargamos los objetos básicos
+   cubo = new Cubo();
+   tetraedro = new Tetraedro();
 
+   // Luces
+   cuadroLuces[0] = new LuzPosicional({200, 200, 200}, GL_LIGHT1, {0.2, 0.2, 0.2, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
+   cuadroLuces[1] = new LuzDireccional({0, 0}, GL_LIGHT2, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
+
+   // Materiales
+   Tupla4f ambiente1(0.135, 0.2225, 0.1575, 0.1), especular1(0.0, 0.0, 0.0, 0.1), difuso1(0.786, 0.89, 0.97, 0.1);
+   Tupla4f ambiente2(0.0215,	0.1745, 0.0215, 0.6), especular2(0.7038, 0.27048, 0.0828, 0.6), difuso2(0.0, 0.0, 0.0, 0.6);
+   Tupla4f ambiente3(0.0, 0.05, 0.0, 0.078125), especular3(0.04, 0.7, 0.04, 0.078125), difuso3(0.4, 0.5, 0.4, 0.078125);
+
+   Material mat1(difuso1, especular1, ambiente1, 0.1*128.0);
+   Material mat2(difuso2, especular2, ambiente2, 0.01*128.0);
+   Material mat3(difuso3, especular3, ambiente3, 0.6*128.0);
+   peon1->setMaterial(mat1);
+   peon2->setMaterial(mat2);
+   ply1->setMaterial(mat1);
+   cubo->setMaterial(mat1);
+   tetraedro->setMaterial(mat2);
+   cilindro1->setMaterial(mat2);
+   esfera1->setMaterial(mat3);
+   cono1->setMaterial(mat1);
 }
 
 //**************************************************************************
@@ -67,49 +88,66 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
+   glDisable(GL_LIGHTING);
    ejes.draw();
 
+   if(modoIluminacion){
+      if(!glIsEnabled(GL_LIGHTING)){
+        glEnable(GL_LIGHTING);
+      }
+
+      glShadeModel(GL_SMOOTH);
+   }
+
+   else{
+      if(glIsEnabled(GL_LIGHTING)){
+        glDisable(GL_LIGHTING);
+      }
+
+      glShadeModel(GL_FLAT);
+   }
+
    glPushMatrix();
-      glTranslatef(0,170,0);
+      glTranslatef(0, 170, 0);
       cubo->cambiarColor(1.0, 0, 0);
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(100,0,0);
+      glTranslatef(100, 0, 0);
       tetraedro->cambiarColor(1.0, 0, 0);
       tetraedro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
    
    glPushMatrix();
-      glScalef(25.0,25.0,25.0);
+      glScalef(25.0, 25.0, 25.0);
       peon1->cambiarColor(1.0, 0, 0);
       peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(-100,0,0);
+      glTranslatef(-100, 0, 0);
       glScalef(3,3,3);
       ply1->cambiarColor(1.0, 0, 0);
       ply1->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(-100,0,-100);
+      glTranslatef(-100, 0, -100);
       glScalef(3,3,3);
       cilindro1->cambiarColor(1.0, 0, 0);
       cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(100,0,-100);
-      glScalef(3,3,3);
-      cono1->cambiarColor(1.0, 0, 0);
-      cono1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glTranslatef(100, 0, -100);
+      glScalef(25, 25, 25);
+      peon2->cambiarColor(1.0, 0, 0);
+      peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(100,0,100);
+      glTranslatef(100, 0, 100);
       glScalef(5,5,5);
       esfera1->cambiarColor(1.0, 0, 0);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
@@ -199,9 +237,25 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         }
       break;
 
+      case 'I' :
+         if (modoMenu == SELVISUALIZACION){
+            modoIluminacion = !modoIluminacion;
+         }
+      break;
+
+      case '0' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[0]->activar();
+         }
+      break;
+
       case '1' :
         if (modoMenu == SELDIBUJADO){
           modoDibujado = 1;
+        }
+
+        else if (modoMenu == SELVISUALIZACION){
+           cuadroLuces[1]->activar();
         }
       break;
 
@@ -209,7 +263,41 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         if (modoMenu == SELDIBUJADO){
           modoDibujado = 2;
         }
-      break;          
+
+        else if (modoMenu == SELVISUALIZACION){
+           cuadroLuces[2]->activar();
+        }
+      break; 
+
+      case '3' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[3]->activar();
+         }
+      break;  
+
+      case '4' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[4]->activar();
+         }
+      break;
+
+      case '5' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[5]->activar();
+         }
+      break;
+
+      case '6' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[6]->activar();
+         }
+      break;
+
+      case '7' :
+         if (modoMenu == SELVISUALIZACION){
+            cuadroLuces[7]->activar();
+         }
+      break;  
    }
 
    return salir;
