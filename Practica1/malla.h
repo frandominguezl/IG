@@ -23,24 +23,25 @@ class Malla3D
    public:
 
    // dibuja el objeto en modo inmediato
-   void draw_ModoInmediato();
+   // int modoDibujado = (1 = puntos, 2 = lineas, 3 = solido)
+   void draw_ModoInmediato(int modoDibujado);
 
    // dibuja en modo ajedrez
    void draw_Chess();
 
    // dibuja el objeto en modo diferido (usando VBOs)
-   void draw_ModoDiferido();
+   // int modoDibujado = (1 = puntos, 2 = lineas, 3 = solido)
+   void draw_ModoDiferido(int modoDibujado);
 
    // Cambiar el color
    void cambiarColor(float R, float G, float B);
 
-   // función que redibuja el objeto
-   // está función llama a 'draw_ModoInmediato' (modo inmediato)
-   // o bien a 'draw_ModoDiferido' (modo diferido, VBOs)
-   // modoDiferido == true -> se llama a draw_ModoDiferido()
-   // modoDiferido == false -> se llama a draw_ModoInmediato()
-   // modo visualizacion
-   void draw(bool modoDiferido, GLenum visual, bool chess) ;
+   // Funcion que redibuja el objeto
+   // int modoDibujado = (1 = modoInmediato, 2 = modoDiferido, 3 = modoAjedrez)
+   // bool puntos = Activa/Desactiva la visualización en puntos
+   // bool lineas = Activa/Desactiva la visualización en lineas
+   // bool solido = Activa/Desactiva la visualización en solido
+   void draw(int modoDibujado, bool puntos, bool lineas, bool solido);
 
    protected:
 
@@ -52,8 +53,12 @@ class Malla3D
    std::vector<Tupla3f> v ; // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f, fimpar, fpar ; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c, cimpar, cpar ;  // terna para los colores
+   std::vector<Tupla3f> cPuntos, cLineas; // Coloeres para diferentes modos de visualización
+   std::vector<Tupla3f> nv; // Vector de normales de los vértices
+   std::vector<Tupla3f> nc; // Vector de normales de las caras
 
-   GLuint vbo_f = 0, vbo_v = 0;
+   // Variables para visualización en Modo Diferido
+   GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0;
 
    // completar: tabla de colores, tabla de normales de vértices
 } ;

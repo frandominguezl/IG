@@ -6,6 +6,10 @@
 #include "cubo.h"
 #include "tetraedro.h"
 #include "objply.h"
+#include "objrevolucion.h"
+#include "cilindro.h"
+#include "cono.h"
+#include "esfera.h"
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
 class Escena
@@ -34,25 +38,33 @@ class Escena
    void clear_window();
 
    menu modoMenu=NADA;
-   // Objetos de la escena
-   Ejes ejes;
-   Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
-   Tetraedro * tetraedro= nullptr ; // es importante inicializarlo a 'nullptr'
-   ObjPLY * ply1=nullptr;
 
-   // Objeto a dibujar
-   // 1: Cubo
-   // 2: Tetraedro
-   int objDibujo;
+    // Objetos de la escena
+    Ejes ejes;
 
-   // ModoDiferido
-   bool modoDiferido = false;
+    // Objetos PLY
+    ObjPLY * ply1 = nullptr;
 
-   // Modo Ajedrez
-   bool chess = false;
+    // Objetos de revolución
+    ObjRevolucion * peon1 = nullptr;
+    ObjRevolucion * peon2 = nullptr;
+    Cilindro * cilindro1 = nullptr;
+    Cono * cono1 = nullptr;
+    Esfera * esfera1 = nullptr;
 
-   // Modo de Visualización
-   GLenum visual = GL_FILL;
+    // Objetos básicos
+    Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
+    Tetraedro * tetraedro = nullptr ; // es importante inicializarlo a 'nullptr'
+
+    // Modo de Visualización
+    // int modoDibujado = (1 = modoInmediato, 2 = modoDiferido, 3 = modoAjedrez)
+    int modoDibujado = 1;
+
+    // Booleanos para modo visualización en modo puntos, líneas, sólido y ajedrez
+    bool puntos = false, lineas = false, solido = true, chess = false;
+
+    // Controlar las tapas en tiempo de ejecución
+    bool tapas = true;
 
    
    public:

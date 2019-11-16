@@ -18,8 +18,16 @@ Escena::Escena()
 
     ejes.changeAxisSize( 5000 );
 
-    // Llamamos los PLY
+    // Cargamos los bjetos PLY
     ply1 = new ObjPLY("plys/ant.ply");
+
+    // Cargamos objetos de revolución
+    peon1 = new ObjRevolucion("plys/peon.ply", 50);
+    cilindro1 = new Cilindro(50, 50, 10);
+    cono1 = new Cono(50, 30, 10);
+    esfera1 = new Esfera(50, 20, 10);
+
+    // Cargamos los objetos básicos
     cubo = new Cubo();
     tetraedro = new Tetraedro();
 
@@ -33,16 +41,17 @@ Escena::Escena()
 
 void Escena::inicializar( int UI_window_width, int UI_window_height )
 {
-	glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
+   glClearColor( 1.0, 1.0, 1.0, 1.0 );// se indica cual sera el color para limpiar la ventana	(r,v,a,al)
 
-	glEnable( GL_DEPTH_TEST );	// se habilita el z-bufer
-  glEnable (GL_CULL_FACE);    // no dibujar las caras traseras
+   glEnable(GL_DEPTH_TEST);   // se habilita el z-bufer
+   glEnable(GL_CULL_FACE);    // no dibujar las caras traseras
+   glEnable(GL_NORMALIZE);    // Flag para evitar que las transformaciones alteren las normales
 
-	Width  = UI_window_width/10;
-	Height = UI_window_height/10;
+   Width  = UI_window_width/10;
+   Height = UI_window_height/10;
 
    change_projection( float(UI_window_width)/float(UI_window_height) );
-	glViewport( 0, 0, UI_window_width, UI_window_height );
+   glViewport( 0, 0, UI_window_width, UI_window_height );
 }
 
 
@@ -58,26 +67,53 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
-    ejes.draw();
-    if(objDibujo == 1){
-       //cubo->draw(modoDiferido, visual, chess);
-       glPushMatrix();
-         glScalef(5.0, 5.0, 5.0);
-         ply1->cambiarColor(1.0, 0, 0);
-         ply1->draw(modoDiferido, visual, chess);
-       glPopMatrix();
-    }
+   ejes.draw();
 
-    else if(objDibujo == 2){
-      tetraedro->draw(modoDiferido, visual, chess);
-    }
+   glPushMatrix();
+      glTranslatef(0,170,0);
+      cubo->cambiarColor(1.0, 0, 0);
+      cubo->draw(modoDibujado, puntos, lineas, solido);
+   glPopMatrix();
 
-    else{
-       glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
-       ejes.draw();
-    }
-    
-    
+   glPushMatrix();
+      glTranslatef(100,0,0);
+      tetraedro->cambiarColor(1.0, 0, 0);
+      tetraedro->draw(modoDibujado, puntos, lineas, solido);
+   glPopMatrix();
+   
+   glPushMatrix();
+      glScalef(25.0,25.0,25.0);
+      peon1->cambiarColor(1.0, 0, 0);
+      peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
+
+   glPushMatrix();
+      glTranslatef(-100,0,0);
+      glScalef(3,3,3);
+      ply1->cambiarColor(1.0, 0, 0);
+      ply1->draw(modoDibujado, puntos, lineas, solido);
+   glPopMatrix();
+
+   glPushMatrix();
+      glTranslatef(-100,0,-100);
+      glScalef(3,3,3);
+      cilindro1->cambiarColor(1.0, 0, 0);
+      cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
+
+   glPushMatrix();
+      glTranslatef(100,0,-100);
+      glScalef(3,3,3);
+      cono1->cambiarColor(1.0, 0, 0);
+      cono1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
+
+   glPushMatrix();
+      glTranslatef(100,0,100);
+      glScalef(5,5,5);
+      esfera1->cambiarColor(1.0, 0, 0);
+      esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
 }
 
 //**************************************************************************
@@ -92,80 +128,90 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 {
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
-   bool salir=false;
+   bool salir = false;
+   char anterior;
 
    switch( toupper(tecla) )
    {
       case 'Q' :
-         if (modoMenu!=NADA)
-            modoMenu=NADA;            
+         if (modoMenu!=NADA){
+         	modoMenu=NADA;
+         }          
          else {
             salir=true ;
          }
-         break ;
+      break;
+
       case 'O' :
-         // ESTAMOS EN MODO SELECCION DE OBJETO
-         modoMenu=SELOBJETO; 
-         break ;
-        case 'V' :
-         // ESTAMOS EN MODO SELECCION DE MODO DE VISUALIZACION
-         modoMenu=SELVISUALIZACION;
-         break ;
-       case 'D' :
-         // ESTAMOS EN MODO SELECCION DE DIBUJADO
-         modoMenu=SELDIBUJADO;
-         break ;
-         // COMPLETAR con los diferentes opciones de teclado
-      case 'C' :
-         if (modoMenu == SELOBJETO){
-            objDibujo = 1;
+         if(modoMenu != SELVISUALIZACION || modoMenu != SELDIBUJADO){
+         	modoMenu=SELOBJETO;
          }
-         break ;
-      
+      break;
+
       case 'T' :
-         if (modoMenu == SELOBJETO){
-            objDibujo = 2;
+         tapas = !tapas;
+      break;
+
+      case 'V' :
+         if(modoMenu != SELOBJETO || modoMenu != SELDIBUJADO){
+         	modoMenu=SELVISUALIZACION;
          }
          break;
+      case 'D' :
+         if(modoMenu != SELOBJETO || modoMenu != SELVISUALIZACION){
+         	modoMenu=SELVISUALIZACION;
+         }
+      break;
 
       case 'P' :
         if (modoMenu == SELVISUALIZACION){
-          visual = GL_POINT;
+          puntos = !puntos;
         }
-        break;
+      break;
 
       case 'L' :
         if (modoMenu == SELVISUALIZACION){
-          visual = GL_LINE;
+          lineas = !lineas;
         }
-        break;
+      break;
 
       case 'S' :
         if (modoMenu == SELVISUALIZACION){
-          visual = GL_FILL;
+            solido = !solido;
         }
-        break;
+      break;
 
       case 'A' :
         if (modoMenu == SELVISUALIZACION){
-          chess = true;
+          chess = !chess;
+
+          if(chess){
+             modoDibujado = 3;
+          }
+
+          else{
+             modoDibujado = 1;
+          }
         }
-        break;
+
+        else if (modoMenu == SELVISUALIZACION){
+          anterior = 'A';
+        }
+      break;
 
       case '1' :
         if (modoMenu == SELDIBUJADO){
-          modoDiferido = false;
+          modoDibujado = 1;
         }
-        break;
+      break;
 
       case '2' :
-        if (modoDiferido == SELDIBUJADO){
-          modoDiferido = true;
+        if (modoMenu == SELDIBUJADO){
+          modoDibujado = 2;
         }
-        break;
-
-            
+      break;          
    }
+
    return salir;
 }
 //**************************************************************************
