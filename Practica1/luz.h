@@ -15,6 +15,8 @@ class Luz
     public:
     Luz();
     void activar();
+    virtual void variarAnguloAlpha(float incremento){};
+    virtual void variarAnguloBeta(float incremento){};
 };
 
 #endif

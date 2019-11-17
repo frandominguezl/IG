@@ -81,6 +81,11 @@ class Escena
     // Cuadro de luces
     Luz* cuadroLuces[8] = {nullptr};
 
+    // Controlador para el ángulo seleccionado
+    // 0 = alpha
+    // 1 = beta
+    int selecComponente = -1;
+
    
    public:
 

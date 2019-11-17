@@ -167,7 +167,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir = false;
-   char anterior;
 
    switch( toupper(tecla) )
    {
@@ -203,39 +202,73 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case 'P' :
         if (modoMenu == SELVISUALIZACION){
-          puntos = !puntos;
+            modoIluminacion = false;
+            puntos = !puntos;
         }
       break;
 
       case 'L' :
         if (modoMenu == SELVISUALIZACION){
-          lineas = !lineas;
+            modoIluminacion = false;
+            lineas = !lineas;
         }
       break;
 
       case 'S' :
         if (modoMenu == SELVISUALIZACION){
+            modoIluminacion = false;
             solido = !solido;
         }
       break;
 
       case 'A' :
-        if (modoMenu == SELVISUALIZACION){
-          chess = !chess;
+         if (modoMenu == SELVISUALIZACION){
+            modoIluminacion = false;
+            chess = !chess;
 
-          if(chess){
-             modoDibujado = 3;
-          }
+            if(chess){
+               modoDibujado = 3;
+            }
 
-          else{
-             modoDibujado = 1;
-          }
-        }
+            else{
+               modoDibujado = 1;
+            }
+         }
 
-        else if (modoMenu == SELVISUALIZACION){
-          anterior = 'A';
-        }
+         if (modoIluminacion){
+            selecComponente = 0;
+         }
       break;
+
+      case 'B' :
+         if (modoIluminacion){
+            selecComponente = 1;
+         }
+      break;
+
+      case '<' :
+         if (modoIluminacion){
+            if(selecComponente == 0){
+               cuadroLuces[1]->variarAnguloAlpha(-1.0);
+            }
+
+            else if(selecComponente == 1){
+               cuadroLuces[1]->variarAnguloBeta(-1.0);
+            }
+         }
+      break;
+
+      case '>' :
+         if (modoIluminacion){
+            if(selecComponente == 0){
+               cuadroLuces[1]->variarAnguloAlpha(1.0);
+            }
+
+            else if(selecComponente == 1){
+               cuadroLuces[1]->variarAnguloBeta(1.0);
+            }
+         }
+      break;      
 
       case 'I' :
          if (modoMenu == SELVISUALIZACION){
