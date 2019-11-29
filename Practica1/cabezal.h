@@ -5,16 +5,19 @@
 #include "ejerotatorio.h"
 #include "cubo.h"
 
-class Cabezal : public Malla3D
+class Cabezal : public ObjRevolucion
 {
     private:
         EjeRotatorio* eje = nullptr;
         Cubo* c = nullptr;
+        Material * mat = nullptr;
+
         float anguloRotacion = 0.0;
     public:
         Cabezal();
-        void draw();
+        void drawCabezal(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas);
         void setAngulo(float anguloRotacion);
+        void setMaterial(const Material &m);
 };
 
 #endif

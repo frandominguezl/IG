@@ -42,7 +42,7 @@ class Malla3D
    // bool puntos = Activa/Desactiva la visualización en puntos
    // bool lineas = Activa/Desactiva la visualización en lineas
    // bool solido = Activa/Desactiva la visualización en solido
-   void draw(int modoDibujado, bool puntos, bool lineas, bool solido);
+   virtual void draw(int modoDibujado, bool puntos, bool lineas, bool solido);
 
    // Establecer material
    void setMaterial(Material m);
@@ -65,7 +65,7 @@ class Malla3D
    Material * mat = nullptr;
 
    // Variables para visualización en Modo Diferido
-   GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0;
+   GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0, vbo_cp = 0, vbo_cl = 0;
 
    // completar: tabla de colores, tabla de normales de vértices
 } ;

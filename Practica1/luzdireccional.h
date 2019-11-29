@@ -4,6 +4,7 @@
 #include "aux.h"
 #include "luz.h"
 
+
 class LuzDireccional : public Luz
 {
     protected:
@@ -11,6 +12,7 @@ class LuzDireccional : public Luz
     float beta;
 
     public:
+    const float PI = 3.14159265;
     LuzDireccional(Tupla2f direccion, GLenum idLuzOpenGL, Tupla4f colorAmbiente, Tupla4f colorEspecular, Tupla4f colorDifuso);
     void variarAnguloAlpha(float incremento);
     void variarAnguloBeta(float incremento);

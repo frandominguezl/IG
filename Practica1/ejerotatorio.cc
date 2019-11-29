@@ -10,27 +10,41 @@ EjeRotatorio::EjeRotatorio()
 };
 
 // Método draw
-void EjeRotatorio::draw()
+void EjeRotatorio::drawEje(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas)
 {
     glPushMatrix();
         // Transformaciones y dibujado de la esfera
-        glScalef(0.5, 2, 0.5);
-        esfera->draw();
-
-        // Transformaciones y dibujado de la aspa 1
-        glTranslatef(0, 1, 0);
-        aspa1->draw();
-
-        // Transformaciones y dibujado de la aspa 3
-        glTranslatef(0, 1, 0);
-        glRotatef(45.0, 1, 0, 0);
-        aspa2->draw();
-
-        // Transformaciones y dibujado de la aspa 3
-        glTranslatef(0, 1, 0);
-        glRotatef(-45.0, 1, 0, 0);
-        aspa3->draw();
+        glScalef(75, 75, 75);
+        esfera->cambiarColor(1.0, 0, 0);
+        esfera->draw(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
-    
-    draw(this->modoDibujado, this->puntos, this->lineas, this->solido);
+
+    glPushMatrix();
+        // Transformaciones y dibujado de la aspa 1
+        aspa1->cambiarColor(1.0, 0, 0);
+        aspa1->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
+    glPopMatrix();
+
+    glPushMatrix();
+        // Transformaciones y dibujado de la aspa 3
+        glRotatef(230.0, 1, 0, 0);
+        aspa2->cambiarColor(1.0, 0, 0);
+        aspa2->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
+    glPopMatrix();
+
+    glPushMatrix();
+        // Transformaciones y dibujado de la aspa 3
+        glRotatef(-230.0, 1, 0, 0);
+        aspa3->cambiarColor(1.0, 0, 0);
+        aspa3->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
+    glPopMatrix();
+}
+
+// Función para establecer el material
+void EjeRotatorio::setMaterial(const Material &m)
+{
+  aspa1->setMaterial(m);
+  aspa2->setMaterial(m);
+  aspa3->setMaterial(m);
+  esfera->setMaterial(m);
 }

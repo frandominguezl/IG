@@ -5,16 +5,19 @@
 #include "esfera.h"
 #include "aspa.h"
 
-class EjeRotatorio : public Malla3D
+class EjeRotatorio : public ObjRevolucion
 {
     private:
         Aspa* aspa1 = nullptr;
         Aspa* aspa2 = nullptr;
         Aspa* aspa3 = nullptr;
         Esfera* esfera = nullptr;
+
+        Material * mat = nullptr;
     public:
         EjeRotatorio();
-        void draw();
+        void drawEje(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas);
+        void setMaterial(const Material &m);
 };
 
 #endif

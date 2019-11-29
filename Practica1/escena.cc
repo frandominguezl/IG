@@ -32,6 +32,9 @@ Escena::Escena()
    cubo = new Cubo();
    tetraedro = new Tetraedro();
 
+   // Modelo Jerárquico
+   mol = new Molino();
+
    // Luces
    cuadroLuces[0] = new LuzPosicional({200, 200, 200}, GL_LIGHT1, {0.2, 0.2, 0.2, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
    cuadroLuces[1] = new LuzDireccional({0, 0}, GL_LIGHT2, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
@@ -52,6 +55,7 @@ Escena::Escena()
    cilindro1->setMaterial(mat2);
    esfera1->setMaterial(mat3);
    cono1->setMaterial(mat1);
+   mol->setMaterial(mat1);
 }
 
 //**************************************************************************
@@ -107,7 +111,10 @@ void Escena::dibujar()
       glShadeModel(GL_FLAT);
    }
 
-   glPushMatrix();
+   mol->cambiarColor(1.0, 0, 0);
+   mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
+
+   /*glPushMatrix();
       glTranslatef(0, 170, 0);
       cubo->cambiarColor(1.0, 0, 0);
       cubo->draw(modoDibujado, puntos, lineas, solido);
@@ -151,7 +158,7 @@ void Escena::dibujar()
       glScalef(5,5,5);
       esfera1->cambiarColor(1.0, 0, 0);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
+   glPopMatrix();*/
 }
 
 //**************************************************************************
@@ -167,6 +174,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    using namespace std ;
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir = false;
+   bool modoLibertad = false;
 
    switch( toupper(tecla) )
    {
@@ -222,7 +230,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case 'A' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoMenu == SELVISUALIZACION && !modoIluminacion){
             modoIluminacion = false;
             chess = !chess;
 
@@ -235,7 +243,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             }
          }
 
-         if (modoIluminacion){
+         else if (modoIluminacion){
             selecComponente = 0;
          }
       break;

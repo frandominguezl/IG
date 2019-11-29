@@ -14,6 +14,7 @@
 #include "luzposicional.h"
 #include "luzdireccional.h"
 #include "material.h"
+#include "molino.h"
 
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
@@ -65,6 +66,9 @@ class Escena
     // Materiales
     Material mat1;
 
+    // Modelo Jerárquico
+    Molino * mol = nullptr;
+    
     // Modo de Visualización
     // int modoDibujado = (1 = modoInmediato, 2 = modoDiferido, 3 = modoAjedrez)
     int modoDibujado = 1;

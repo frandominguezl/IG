@@ -5,14 +5,17 @@
 #include "cilindro.h"
 #include "cono.h"
 
-class Aspa : public Malla3D
+class Aspa : public ObjRevolucion
 {
     private:
         Cilindro* cilin = nullptr;
         Cono* cono = nullptr;
+        
+        Material * mat = nullptr;
     public:
         Aspa();
-        void draw();
+        void drawAspa(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas);
+        void setMaterial(const Material &m);
 };
 
 #endif

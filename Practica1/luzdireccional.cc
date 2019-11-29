@@ -29,7 +29,7 @@ void LuzDireccional::variarAnguloBeta(float incremento){
 
 // Variar la posición de los ángulos
 void LuzDireccional::calcularPosiciones(){
-	this->posicion[0] = sin(alpha*(M_PI/180));
-	this->posicion[1] = sin(beta*(M_PI/180));
-    this->posicion[2] = cos(alpha*(M_PI/180))*cos(beta*(M_PI/180));
+	this->posicion[0] = sin(alpha*(PI/180));
+	this->posicion[1] = sin(beta*(PI/180));
+    this->posicion[2] = cos(alpha*(PI/180))*cos(beta*(PI/180));
 }

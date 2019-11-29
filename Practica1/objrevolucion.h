@@ -23,11 +23,10 @@
 // Cubo con centro en el origen y lado unidad por defecto
 // (tiene 9 vertices y 6 caras)
 
-static const float PI = 3.14159265;
-
 class ObjRevolucion : public Malla3D
 {
     public:
+        const float PI = 3.14159265;
         int num_instancias = 0;
 
         ObjRevolucion();

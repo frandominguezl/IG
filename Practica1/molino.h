@@ -3,22 +3,26 @@
 
 #include "aux.h"
 #include "cabezal.h"
-#include "soporte.h"
-#include "plataforma.h"
+#include "material.h"
 
-class Molino : public Malla3D
+class Molino : public ObjRevolucion
 {
     private:
         Cabezal* cabezal = nullptr;
-        Plataforma* plat = nullptr;
-        Soporte* soporte = nullptr;
+        Cubo* plat = nullptr;
+        Cilindro* soporte = nullptr;
+
+        Material * mat = nullptr;
+
         float rotacionCabezalY = 0.0;
-        float rotacionCabezalX = 0.0;
+        float rotacionCabezalZ = 0.0;
     public:
         Molino();
-        void draw();
+        void drawMolino(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas);
         void setAnguloCabezalY(float angulo);
-        void setAnguloCabezalX(float angulo);
+        void setAnguloCabezalZ(float angulo);
+        void setMaterial(const Material &m);
+        void setRotacionEje(float angulo);
 };
 
 #endif

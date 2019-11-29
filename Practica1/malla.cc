@@ -119,8 +119,6 @@ void Malla3D::draw_ModoDiferido(int modoDibujado)
   if (vbo_v == 0 && vbo_f == 0){
    vbo_v = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(float)*v.size(), v.data());
    vbo_f = CrearVBO(GL_ELEMENT_ARRAY_BUFFER,3*sizeof(int)*f.size(), f.data());
-   vbo_c = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*c.size(), c.data());
-   vbo_n = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(float)*nv.size(), nv.data());
   }
 
    // Array de vértices
@@ -128,30 +126,49 @@ void Malla3D::draw_ModoDiferido(int modoDibujado)
    glVertexPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_VERTEX_ARRAY);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_f);
 
-   // Array de triángulos
-   glBindBuffer(GL_ARRAY_BUFFER, vbo_f);
-   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-   // Array de colores
-   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_c);
-   glVertexPointer(3, GL_FLOAT, 0, 0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
-   glEnableClientState(GL_COLOR_ARRAY);
-
-   switch(modoDibujado)
-   {
-      case 1: glColorPointer(3, GL_FLOAT, 0, cPuntos.data()); break;
-      case 2: glColorPointer(3, GL_FLOAT, 0, cLineas.data()); break;
-      case 3: glColorPointer(3, GL_FLOAT, 0, c.data()); break;
+   if (vbo_n == 0){
+      vbo_n = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(float)*nv.size(), nv.data());
    }
 
    // Array de normales
    glBindBuffer(GL_ARRAY_BUFFER, vbo_n);
-   glVertexPointer(3, GL_FLOAT, 0, 0);
+   glNormalPointer(GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_NORMAL_ARRAY);
+
+   // Array de colores
+   glEnableClientState(GL_COLOR_ARRAY);
+
+   switch(modoDibujado)
+   {
+      case 1:
+         if(vbo_cp == 0)
+            vbo_cp = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*cPuntos.size(), cPuntos.data());
+         
+         glBindBuffer(GL_ARRAY_BUFFER, vbo_cp);
+      break;
+
+      case 2:
+         if(vbo_cl == 0)
+            vbo_cl = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*cLineas.size(), cLineas.data());
+         
+         glBindBuffer(GL_ARRAY_BUFFER, vbo_cl);
+      break;
+      
+      case 3:
+         if(vbo_c == 0)
+            vbo_c = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*c.size(), c.data());
+         
+         glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
+      break;
+   }
+
+   glColorPointer(3, GL_FLOAT, 0, 0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, 0);
+   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glDisableClientState(GL_NORMAL_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
