@@ -85,6 +85,9 @@ class Escena
     // Cuadro de luces
     Luz* cuadroLuces[8] = {nullptr};
 
+    // Activación de las luces
+    bool luces[8] = {false};
+
     // Controlador para el ángulo seleccionado
     // 0 = alpha
     // 1 = beta

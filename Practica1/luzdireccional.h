@@ -14,8 +14,8 @@ class LuzDireccional : public Luz
     public:
     const float PI = 3.14159265;
     LuzDireccional(Tupla2f direccion, GLenum idLuzOpenGL, Tupla4f colorAmbiente, Tupla4f colorEspecular, Tupla4f colorDifuso);
-    void variarAnguloAlpha(float incremento);
-    void variarAnguloBeta(float incremento);
+    void variarAnguloAlpha(float incremento) override;
+    void variarAnguloBeta(float incremento) override;
     void calcularPosiciones();
 };
 

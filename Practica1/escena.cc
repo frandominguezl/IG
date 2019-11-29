@@ -52,7 +52,7 @@ Escena::Escena()
    ply1->setMaterial(mat1);
    cubo->setMaterial(mat1);
    tetraedro->setMaterial(mat2);
-   cilindro1->setMaterial(mat2);
+   cilindro1->setMaterial(mat3);
    esfera1->setMaterial(mat3);
    cono1->setMaterial(mat1);
    mol->setMaterial(mat1);
@@ -100,6 +100,28 @@ void Escena::dibujar()
         glEnable(GL_LIGHTING);
       }
 
+      for(int i=0; i<8; i++){
+         if(cuadroLuces[i] != nullptr){
+            cuadroLuces[i]->activar();
+         }
+      }
+
+      if(luces[0]){
+         cuadroLuces[0]->activar();
+      }
+
+      else{
+         glDisable(GL_LIGHT0);
+      }
+
+      if(luces[1]){
+         cuadroLuces[1]->activar();
+      }
+
+      else{
+         glDisable(GL_LIGHT1);
+      }      
+
       glShadeModel(GL_SMOOTH);
    }
 
@@ -111,11 +133,14 @@ void Escena::dibujar()
       glShadeModel(GL_FLAT);
    }
 
-   mol->cambiarColor(1.0, 0, 0);
-   mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
+   glPushMatrix();
+      mol->cambiarColor(1.0, 0, 0);
+      mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
 
-   /*glPushMatrix();
+   glPushMatrix();
       glTranslatef(0, 170, 0);
+      glScalef(0.5, 0.5, 0.5);
       cubo->cambiarColor(1.0, 0, 0);
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
@@ -127,6 +152,7 @@ void Escena::dibujar()
    glPopMatrix();
    
    glPushMatrix();
+      glTranslatef(0, -50, 0);
       glScalef(25.0, 25.0, 25.0);
       peon1->cambiarColor(1.0, 0, 0);
       peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
@@ -158,7 +184,7 @@ void Escena::dibujar()
       glScalef(5,5,5);
       esfera1->cambiarColor(1.0, 0, 0);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();*/
+   glPopMatrix();
 }
 
 //**************************************************************************
@@ -286,7 +312,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case '0' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[0]->activar();
+            luces[0] = !luces[0];
          }
       break;
 
@@ -296,7 +322,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         }
 
         else if (modoMenu == SELVISUALIZACION){
-           cuadroLuces[1]->activar();
+           luces[1] = !luces[1];
         }
       break;
 
@@ -306,37 +332,37 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
         }
 
         else if (modoMenu == SELVISUALIZACION){
-           cuadroLuces[2]->activar();
+           luces[2] = !luces[2];
         }
       break; 
 
       case '3' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[3]->activar();
+            luces[3] = !luces[3];
          }
       break;  
 
       case '4' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[4]->activar();
+            luces[4] = !luces[4];
          }
       break;
 
       case '5' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[5]->activar();
+            luces[5] = !luces[5];
          }
       break;
 
       case '6' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[6]->activar();
+            luces[6] = !luces[6];
          }
       break;
 
       case '7' :
          if (modoMenu == SELVISUALIZACION){
-            cuadroLuces[7]->activar();
+            luces[7] = !luces[7];
          }
       break;  
    }
