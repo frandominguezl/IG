@@ -79,7 +79,52 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    glViewport( 0, 0, UI_window_width, UI_window_height );
 }
 
+// Función para invocar a los diferentes métodos para animar el modelo jerárquico
+void Escena::animarModeloJerarquico()
+{
+   static float anguloEje, anguloCabezalY, anguloCabezalZ, altura;
+   static int pausa = 0;
 
+   if(animate){
+         switch(pausa){
+         case 0:
+            anguloEje += 1.2;
+            anguloCabezalY += 0.5*factorVelocidad;
+
+            if(anguloCabezalY >= 60.0){
+               pausa = 1;
+            }
+         break;
+
+         case 1:
+            anguloEje += 1.2;
+            anguloCabezalZ -= 0.5*factorVelocidad;
+
+            if(anguloCabezalZ <= -35.0){
+               pausa = 2;
+            }
+         break;
+
+         case 2:
+            anguloEje += 1.2;
+            altura += 0.5*factorVelocidad;
+
+            if(altura >= 25.0){
+               pausa = 3;
+            }
+         break;
+
+         case 3:
+            anguloEje += 1.2;
+         break;
+      }
+   }
+
+   mol->setRotacionEje(anguloEje*factorVelocidad);
+   mol->setAnguloCabezalY(anguloCabezalY);
+   mol->setAnguloCabezalZ(anguloCabezalZ);
+   mol->setAltura(altura);
+}
 
 // **************************************************************************
 //
@@ -138,7 +183,7 @@ void Escena::dibujar()
       mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
-   glPushMatrix();
+   /*glPushMatrix();
       glTranslatef(0, 170, 0);
       glScalef(0.5, 0.5, 0.5);
       cubo->cambiarColor(1.0, 0, 0);
@@ -184,7 +229,7 @@ void Escena::dibujar()
       glScalef(5,5,5);
       esfera1->cambiarColor(1.0, 0, 0);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
+   glPopMatrix();*/
 }
 
 //**************************************************************************
@@ -221,6 +266,22 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case 'T' :
          tapas = !tapas;
+      break;
+
+      case 'J' :
+         animate = !animate;
+      break;
+
+      case '+' :
+         if(animate){
+            factorVelocidad += 1.0;
+         }
+      break;
+
+      case '-' :
+         if(animate){
+            factorVelocidad -= 1.0;
+         }
       break;
 
       case 'V' :

@@ -5,7 +5,7 @@ Molino::Molino()
 {
     cabezal = new Cabezal();
     plat = new Cubo();
-    soporte = new Cilindro(50, 50, 10);
+    soporte = new Cilindro(50, 80, 10);
     
 };
 
@@ -15,20 +15,27 @@ void Molino::drawMolino(int modoDibujado, bool puntos, bool lineas, bool solido,
 
     glPushMatrix();
         // Dibujo el soporte
-        soporte->cambiarColor(1.0, 0, 0);
+        soporte->cambiarColor(0.6, 0.8, 0.9);
         soporte->draw(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
 
     glPushMatrix();
         // Dibujo la plataforma
         glScalef(1, 0.1, 1);
-        plat->cambiarColor(0.2, 1, 0);
+        plat->cambiarColor(0.6, 0.9, 0.3);
         plat->draw(modoDibujado, puntos, lineas, solido);
     glPopMatrix();
 
     glPushMatrix();
+        glPushMatrix();
+            // Dibujo el soporte
+            glTranslatef(0, altura, 0);
+            soporte->cambiarColor(0.6, 0.8, 0.9);
+            soporte->draw(modoDibujado, puntos, lineas, solido, tapas);
+        glPopMatrix();
+
         // Aplico las transformaciones y dibujo el cabezal
-        glTranslatef(0, 50, 0);
+        glTranslatef(0, 80+altura, 0);
         glScalef(0.20, 0.20, 0.20);
         glRotatef(this->rotacionCabezalZ, 0, 0, 1);
         glRotatef(this->rotacionCabezalY, 0, 1, 0);
@@ -49,8 +56,14 @@ void Molino::setAnguloCabezalZ(float angulo)
 }
 
 // Establecer ángulo de rotación para el eje rotatorio
-void Molino::setRotacionEje(float angulo){
+void Molino::setRotacionEje(float angulo)
+{
     cabezal->setAngulo(angulo);
+}
+
+// Establecer la altura
+void Molino::setAltura(float altura){
+    this->altura = altura;
 }
 
 // Función para establecer el material

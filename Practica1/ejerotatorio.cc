@@ -15,27 +15,24 @@ void EjeRotatorio::drawEje(int modoDibujado, bool puntos, bool lineas, bool soli
     glPushMatrix();
         // Transformaciones y dibujado de la esfera
         glScalef(75, 75, 75);
-        esfera->cambiarColor(1.0, 0, 0);
+        esfera->cambiarColor(0.6, 0.8, 0.9);
         esfera->draw(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
 
     glPushMatrix();
         // Transformaciones y dibujado de la aspa 1
-        aspa1->cambiarColor(1.0, 0, 0);
         aspa1->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
 
     glPushMatrix();
         // Transformaciones y dibujado de la aspa 3
         glRotatef(230.0, 1, 0, 0);
-        aspa2->cambiarColor(1.0, 0, 0);
         aspa2->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
 
     glPushMatrix();
         // Transformaciones y dibujado de la aspa 3
         glRotatef(-230.0, 1, 0, 0);
-        aspa3->cambiarColor(1.0, 0, 0);
         aspa3->drawAspa(modoDibujado, puntos, lineas, solido, tapas);
     glPopMatrix();
 }

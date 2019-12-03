@@ -10,6 +10,7 @@ class Cabezal : public ObjRevolucion
     private:
         EjeRotatorio* eje = nullptr;
         Cubo* c = nullptr;
+
         Material * mat = nullptr;
 
         float anguloRotacion = 0.0;

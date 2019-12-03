@@ -9,7 +9,6 @@ class Aspa : public ObjRevolucion
 {
     private:
         Cilindro* cilin = nullptr;
-        Cono* cono = nullptr;
         
         Material * mat = nullptr;
     public:

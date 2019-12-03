@@ -88,6 +88,12 @@ class Escena
     // Activación de las luces
     bool luces[8] = {false};
 
+    // Booleano para activar/desactivar animación
+    bool animate = false;
+
+    // Factor de velocidad
+    float factorVelocidad = 1.0;
+
     // Controlador para el ángulo seleccionado
     // 0 = alpha
     // 1 = beta
@@ -99,6 +105,7 @@ class Escena
     Escena();
 	void inicializar( int UI_window_width, int UI_window_height );
 	void redimensionar( int newWidth, int newHeight ) ;
+    void animarModeloJerarquico();
 
 	// Dibujar
 	void dibujar() ;
