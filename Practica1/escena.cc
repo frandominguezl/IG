@@ -156,7 +156,7 @@ void Escena::dibujar()
       }
 
       else{
-         glDisable(GL_LIGHT0);
+         glDisable(GL_LIGHT1);
       }
 
       if(luces[1]){
@@ -164,7 +164,7 @@ void Escena::dibujar()
       }
 
       else{
-         glDisable(GL_LIGHT1);
+         glDisable(GL_LIGHT2);
       }      
 
       glShadeModel(GL_SMOOTH);
