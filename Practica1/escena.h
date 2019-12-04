@@ -91,8 +91,12 @@ class Escena
     // Booleano para activar/desactivar animación
     bool animate = false;
 
-    // Factor de velocidad
+    // Factores de velocidad
     float factorVelocidad = 1.0;
+    float fVGrado0 = 1.0;
+    float fVGrado1 = 1.0;
+    float fVGrado2 = 1.0;
+    float fVGrado3 = 1.0;
 
     // Controlador para el ángulo seleccionado
     // 0 = alpha

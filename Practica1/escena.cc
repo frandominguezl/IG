@@ -55,7 +55,7 @@ Escena::Escena()
    cilindro1->setMaterial(mat3);
    esfera1->setMaterial(mat3);
    cono1->setMaterial(mat1);
-   mol->setMaterial(mat1);
+   mol->setMaterial(mat3);
 }
 
 //**************************************************************************
@@ -89,7 +89,7 @@ void Escena::animarModeloJerarquico()
          switch(pausa){
          case 0:
             anguloEje += 1.2;
-            anguloCabezalY += 0.5*factorVelocidad;
+            anguloCabezalY += 0.5*fVGrado1*factorVelocidad;
 
             if(anguloCabezalY >= 60.0){
                pausa = 1;
@@ -98,7 +98,7 @@ void Escena::animarModeloJerarquico()
 
          case 1:
             anguloEje += 1.2;
-            anguloCabezalZ -= 0.5*factorVelocidad;
+            anguloCabezalZ -= 0.5*fVGrado2*factorVelocidad;
 
             if(anguloCabezalZ <= -35.0){
                pausa = 2;
@@ -107,7 +107,7 @@ void Escena::animarModeloJerarquico()
 
          case 2:
             anguloEje += 1.2;
-            altura += 0.5*factorVelocidad;
+            altura += 0.5*fVGrado3*factorVelocidad;
 
             if(altura >= 25.0){
                pausa = 3;
@@ -120,7 +120,7 @@ void Escena::animarModeloJerarquico()
       }
    }
 
-   mol->setRotacionEje(anguloEje*factorVelocidad);
+   mol->setRotacionEje(anguloEje*fVGrado0*factorVelocidad);
    mol->setAnguloCabezalY(anguloCabezalY);
    mol->setAnguloCabezalZ(anguloCabezalZ);
    mol->setAltura(altura);
@@ -246,6 +246,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir = false;
    bool modoLibertad = false;
+   static int gradoLibertad = -1;
 
    switch( toupper(tecla) )
    {
@@ -276,11 +277,32 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          if(animate){
             factorVelocidad += 1.0;
          }
+
+         else{
+            switch(gradoLibertad)
+            {
+               case 0: fVGrado0 += 1.0; break;
+               case 1: fVGrado1 += 1.0; break;
+               case 2: fVGrado2 += 1.0; break;
+               case 3: fVGrado3 += 1.0; break;
+               std::cout<<fVGrado3;
+            }
+         }
       break;
 
       case '-' :
          if(animate){
             factorVelocidad -= 1.0;
+         }
+
+         else{
+            switch(gradoLibertad)
+            {
+               case 0: fVGrado0 -= 1.0; break;
+               case 1: fVGrado1 -= 1.0; break;
+               case 2: fVGrado2 -= 1.0; break;
+               case 3: fVGrado3 -= 1.0; break;
+            }
          }
       break;
 
@@ -372,8 +394,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case '0' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoIluminacion){
             luces[0] = !luces[0];
+         }
+
+         else if (modoMenu == SELVISUALIZACION){
+            gradoLibertad = 0;
          }
       break;
 
@@ -382,8 +408,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
           modoDibujado = 1;
         }
 
-        else if (modoMenu == SELVISUALIZACION){
+        else if (modoIluminacion){
            luces[1] = !luces[1];
+        }
+
+        else if (modoMenu == SELVISUALIZACION){
+           gradoLibertad = 1;
         }
       break;
 
@@ -392,15 +422,24 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
           modoDibujado = 2;
         }
 
-        else if (modoMenu == SELVISUALIZACION){
+        else if (modoIluminacion){
            luces[2] = !luces[2];
+        }
+
+        else if (modoMenu == SELVISUALIZACION){
+           gradoLibertad = 2;
         }
       break; 
 
       case '3' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoIluminacion){
             luces[3] = !luces[3];
          }
+
+         else if (modoMenu == SELVISUALIZACION){
+           gradoLibertad = 3;
+           std::cout<<gradoLibertad;
+        }
       break;  
 
       case '4' :
