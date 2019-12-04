@@ -17,6 +17,7 @@ class Luz
     void activar();
     virtual void variarAnguloAlpha(float incremento){};
     virtual void variarAnguloBeta(float incremento){};
+    GLenum getID();
 };
 
 #endif

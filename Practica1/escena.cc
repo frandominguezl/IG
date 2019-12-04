@@ -146,26 +146,14 @@ void Escena::dibujar()
       }
 
       for(int i=0; i<8; i++){
-         if(cuadroLuces[i] != nullptr){
+         if(cuadroLuces[i] != nullptr && luces[i]){
             cuadroLuces[i]->activar();
          }
-      }
-
-      if(luces[0]){
-         cuadroLuces[0]->activar();
-      }
-
-      else{
-         glDisable(GL_LIGHT1);
-      }
-
-      if(luces[1]){
-         cuadroLuces[1]->activar();
-      }
-
-      else{
-         glDisable(GL_LIGHT2);
-      }      
+         
+         else if (cuadroLuces[i] != nullptr && !luces[i]){
+            glDisable(cuadroLuces[i]->getID());
+         }
+      }  
 
       glShadeModel(GL_SMOOTH);
    }

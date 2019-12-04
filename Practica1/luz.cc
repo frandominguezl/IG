@@ -12,3 +12,9 @@ void Luz::activar()
 	glLightfv(this->id, GL_AMBIENT, this->colorAmbiente);
 	glLightfv(this->id, GL_POSITION, this->posicion);
 }
+
+// GET de ID
+GLenum Luz::getID()
+{
+	return this->id;
+}
