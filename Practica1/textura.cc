@@ -33,11 +33,15 @@ void Textura::activar()
     // Identificador de la textura activa
     glBindTexture(GL_TEXTURE_2D, textura_id);
 
+    // Cuando está la iluminación activada 
     glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
 
-    // OpenGL tiene que averiguar qué texel asignar a una coordenada, independientemente de la resolución
+    // Cómo se selecciona el texel o texels a partir de una coordenada de textura
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Entorno para las texturas
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
 
     // Para coordenadas fuera del rango {[0,0], [1,1]}
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
