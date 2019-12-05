@@ -31,6 +31,7 @@ Escena::Escena()
    // Cargamos los objetos básicos
    cubo = new Cubo();
    tetraedro = new Tetraedro();
+   cuadro = new Cuadro();
 
    // Modelo Jerárquico
    mol = new Molino();
@@ -56,6 +57,11 @@ Escena::Escena()
    esfera1->setMaterial(mat3);
    cono1->setMaterial(mat1);
    mol->setMaterial(mat3);
+
+   // Texturas
+   tex1 = Textura("img/text-madera.jpg", 1);
+   cuadro->setMaterial(mat1);
+   cuadro->setTextura(tex1);
 }
 
 //**************************************************************************
@@ -165,11 +171,18 @@ void Escena::dibujar()
 
       glShadeModel(GL_FLAT);
    }
+   
+   glEnable(GL_TEXTURE_2D);
+   tex1.activar();
 
    glPushMatrix();
+      cuadro->draw(modoDibujado, puntos, lineas, solido);
+   glPopMatrix();
+
+   /*glPushMatrix();
       mol->cambiarColor(1.0, 0, 0);
       mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
+   glPopMatrix();*/
 
    /*glPushMatrix();
       glTranslatef(0, 170, 0);

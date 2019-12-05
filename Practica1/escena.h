@@ -15,6 +15,8 @@
 #include "luzdireccional.h"
 #include "material.h"
 #include "molino.h"
+#include "cuadro.h"
+#include "textura.h"
 
 
 typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
@@ -60,11 +62,17 @@ class Escena
     Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
     Tetraedro * tetraedro = nullptr ; // es importante inicializarlo a 'nullptr'
 
+    // Cuadro
+    Cuadro* cuadro = nullptr;
+
     // Luces
     LuzPosicional * luzP = nullptr;
 
     // Materiales
     Material mat1;
+
+    // Texturas
+    Textura tex1;
 
     // Modelo Jerárquico
     Molino * mol = nullptr;

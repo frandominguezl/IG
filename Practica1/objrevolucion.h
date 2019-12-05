@@ -12,6 +12,7 @@
 
 #include "aux.h"
 #include "malla.h"
+#include "textura.h"
 
 // *****************************************************************************
 //
@@ -51,6 +52,9 @@ class ObjRevolucion : public Malla3D
         // bool lineas = Activa/Desactiva la visualización en lineas
         // bool solido = Activa/Desactiva la visualización en solido
         void draw(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas) ;
+
+        // Función para el cálculo de las coordenadas de texturas
+        void calcularCoordTextura();
 
     protected:
         std::vector<Tupla3f> voltearVertices(const std::vector<Tupla3f> & perfil_original);

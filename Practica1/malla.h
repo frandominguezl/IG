@@ -12,6 +12,7 @@
 
 #include "aux.h"
 #include "material.h"
+#include "textura.h"
 
 // *****************************************************************************
 //
@@ -47,6 +48,9 @@ class Malla3D
    // Establecer material
    void setMaterial(Material m);
 
+   // Establecer la textura
+   void setTextura(Textura t);
+
    protected:
 
    // Visualización en Modo Diferido (VBO)
@@ -54,15 +58,21 @@ class Malla3D
 
    void calcular_normales() ; // calcula tabla de normales de vértices (práctica 3)
 
+   void calcularCoordenadas(); // Calcular coordenadas de textura
+
    std::vector<Tupla3f> v ; // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f, fimpar, fpar ; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c, cimpar, cpar ;  // terna para los colores
    std::vector<Tupla3f> cPuntos, cLineas; // Coloeres para diferentes modos de visualización
    std::vector<Tupla3f> nv; // Vector de normales de los vértices
    std::vector<Tupla3f> nc; // Vector de normales de las caras
+   std::vector<Tupla2f> ct; // Tabla de coordenadas de texturas
 
    // Material
-   Material * mat = nullptr;
+   Material* mat = nullptr;
+
+   // Textura
+   Textura* tex = nullptr;
 
    // Variables para visualización en Modo Diferido
    GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0, vbo_cp = 0, vbo_cl = 0;

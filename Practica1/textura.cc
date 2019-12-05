@@ -1,0 +1,47 @@
+#include "textura.h"
+
+using namespace jpg;
+
+// Constructor por defecto
+Textura::Textura(){};
+
+// Constructor por parámetro
+Textura::Textura(std::string archivo, GLuint id){
+    this->textura_id = id;
+
+    glGenTextures(1, &textura_id);
+
+    // Cargamos la imagen
+    if(this->pimg == nullptr)
+        this->pimg = new Imagen(archivo);
+
+    // Asignamos columnas y filas
+    this->width = pimg->tamX();
+    this->height = pimg->tamY();
+
+    // Leemos los texels aplicando reflejo horizontal
+    for(int i=0; i<this->width; i++){
+        for(int j=0; j<this->height; j++){
+            this->data.push_back(this->pimg->leerPixel(i, j));
+        }
+    }
+}
+
+// Función activar
+void Textura::activar()
+{   
+    // Identificador de la textura activa
+    glBindTexture(GL_TEXTURE_2D, textura_id);
+
+    glLightModeli(GL_LIGHT_MODEL_COLOR_CONTROL, GL_SEPARATE_SPECULAR_COLOR);
+
+    // OpenGL tiene que averiguar qué texel asignar a una coordenada, independientemente de la resolución
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+    // Para coordenadas fuera del rango {[0,0], [1,1]}
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, pimg->leerPixels());
+}

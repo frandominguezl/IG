@@ -29,13 +29,19 @@ void Malla3D::draw_ModoInmediato(int modoDibujado)
       case 3: glColorPointer(3, GL_FLOAT, 0, c.data()); break;
    }
 
+   // Tabla de texturas
+   if(!ct.empty()){
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+   }
+
    // Tabla de triángulos
    glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
 
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_NORMAL_ARRAY);
    glDisableClientState(GL_VERTEX_ARRAY);
-
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void Malla3D::cambiarColor(float R, float G, float B)
@@ -179,12 +185,15 @@ void Malla3D::draw_ModoDiferido(int modoDibujado)
 // puede llamar a  draw_ModoInmediato o bien a draw_ModoDiferido
 
 void Malla3D::draw(int modoDibujado, bool puntos, bool lineas, bool solido)
-{
-   mat->aplicar();
+{ 
+   if(mat != nullptr)
+      mat->aplicar();
 
-   if(nv.empty()){
+   if(ct.empty())
+      calcularCoordenadas();
+   
+   if(nv.empty())
       calcular_normales();
-   }
    
    if(puntos){
       glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
@@ -250,8 +259,25 @@ void Malla3D::calcular_normales()
   }
 }
 
+// Función para calcular las coordenadas de textura
+void Malla3D::calcularCoordenadas()
+{
+   // Creamos la tabla de coordenadas
+   Tupla2f co1(0.0, 0.0), co2(this->tex->getWidth(), 0.0), co3(0.0, this->tex->getHeight()), co4(this->tex->getWidth(), this->tex->getHeight());
+   this->ct.push_back(co1);
+   this->ct.push_back(co2);
+   this->ct.push_back(co3);
+   this->ct.push_back(co4);
+}
+
 // Función para establecer el material
 void Malla3D::setMaterial(Material m)
 {
   mat = new Material(m);
+}
+
+// Función para establecer la textura
+void Malla3D::setTextura(Textura t)
+{
+   tex = new Textura(t);
 }
