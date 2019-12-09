@@ -171,6 +171,12 @@ void Malla3D::draw_ModoDiferido(int modoDibujado)
       break;
    }
 
+   // Tabla de texturas
+   if(!ct.empty() && tex != nullptr){
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+   }
+
    glColorPointer(3, GL_FLOAT, 0, 0);
    glBindBuffer(GL_ARRAY_BUFFER, 0);
    glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, 0);

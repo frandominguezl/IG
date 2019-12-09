@@ -98,6 +98,7 @@ class Escena
 
     // Booleano para activar/desactivar animación
     bool animate = false;
+    bool animatePuntual = false;
 
     // Factores de velocidad
     float factorVelocidad = 1.0;

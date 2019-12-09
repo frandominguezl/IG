@@ -14,3 +14,12 @@ LuzPosicional::LuzPosicional(Tupla3f posicion, GLenum idLuzOpenGL, Tupla4f color
 	this->posicion[2] = posicion[2];
 	this->posicion[3] = 1;
 }
+
+// Setter de posición
+void LuzPosicional::setPosicion(Tupla3f posicion)
+{
+	this->posicion[0] = posicion[0];
+	this->posicion[1] = posicion[1];
+	this->posicion[2] = posicion[2];
+	this->posicion[3] = 1;
+}

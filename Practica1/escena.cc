@@ -37,7 +37,7 @@ Escena::Escena()
    mol = new Molino();
 
    // Luces
-   cuadroLuces[0] = new LuzPosicional({200, 200, 200}, GL_LIGHT1, {0.2, 0.2, 0.2, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
+   cuadroLuces[0] = new LuzPosicional({0, 0, 0}, GL_LIGHT1, {0.2, 0.2, 0.2, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
    cuadroLuces[1] = new LuzDireccional({0, 0}, GL_LIGHT2, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
 
    // Materiales
@@ -93,6 +93,7 @@ void Escena::animarModeloJerarquico()
 {
    static float anguloEje, anguloCabezalY, anguloCabezalZ, altura;
    static int pausa = 0;
+   static Tupla3f posicion{200, 200, 200};
 
    if(animate){
          switch(pausa){
@@ -129,10 +130,17 @@ void Escena::animarModeloJerarquico()
       }
    }
 
+   if(animatePuntual){
+      posicion[0] -= 1.0;
+      posicion[1] -= 1.0;
+      posicion[2] -= 1.0;
+   }
+
    mol->setRotacionEje(anguloEje*fVGrado0*factorVelocidad);
    mol->setAnguloCabezalY(anguloCabezalY);
    mol->setAnguloCabezalZ(anguloCabezalZ);
    mol->setAltura(altura);
+   cuadroLuces[0]->setPosicion(posicion);
 }
 
 // **************************************************************************
@@ -179,6 +187,7 @@ void Escena::dibujar()
 
    glPushMatrix();
       glTranslatef(100, 0, 0);
+      cuadro->cambiarColor(1.0, 0.0, 0.0);
       cuadro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
@@ -265,18 +274,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break;
 
-      case 'O' :
-         if(modoMenu != SELVISUALIZACION || modoMenu != SELDIBUJADO){
-         	modoMenu=SELOBJETO;
-         }
-      break;
-
       case 'T' :
          tapas = !tapas;
-      break;
-
-      case 'J' :
-         animate = !animate;
       break;
 
       case '+' :
@@ -291,7 +290,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
                case 1: fVGrado1 += 1.0; break;
                case 2: fVGrado2 += 1.0; break;
                case 3: fVGrado3 += 1.0; break;
-               std::cout<<fVGrado3;
             }
          }
       break;
@@ -324,10 +322,13 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case 'P' :
-        if (modoMenu == SELVISUALIZACION){
+        if (modoMenu == SELVISUALIZACION && !modoIluminacion){
             modoIluminacion = false;
             puntos = !puntos;
         }
+
+         if(modoIluminacion && luces[0])
+            animatePuntual = !animatePuntual;
       break;
 
       case 'L' :
@@ -361,12 +362,20 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          else if (modoIluminacion){
             selecComponente = 0;
          }
+
+         else{
+            animate = !animate;
+         }
       break;
 
       case 'B' :
          if (modoIluminacion){
             selecComponente = 1;
          }
+      break;
+
+      case 'M':
+         animate = false;
       break;
 
       case '<' :
@@ -404,7 +413,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             luces[0] = !luces[0];
          }
 
-         else if (modoMenu == SELVISUALIZACION){
+         else if (!modoIluminacion && !animate){
             gradoLibertad = 0;
          }
       break;
@@ -418,7 +427,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
            luces[1] = !luces[1];
         }
 
-        else if (modoMenu == SELVISUALIZACION){
+        else if (!modoIluminacion && !animate){
            gradoLibertad = 1;
         }
       break;
@@ -432,7 +441,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
            luces[2] = !luces[2];
         }
 
-        else if (modoMenu == SELVISUALIZACION){
+        else if (!modoIluminacion && !animate){
            gradoLibertad = 2;
         }
       break; 
@@ -442,9 +451,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             luces[3] = !luces[3];
          }
 
-         else if (modoMenu == SELVISUALIZACION){
+         else if (!modoIluminacion && !animate){
            gradoLibertad = 3;
-           std::cout<<gradoLibertad;
         }
       break;  
 
