@@ -57,11 +57,14 @@ Escena::Escena()
    esfera1->setMaterial(mat3);
    cono1->setMaterial(mat1);
    mol->setMaterial(mat3);
+   cuadro->setMaterial(mat1);
 
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
-   cuadro->setMaterial(mat1);
    cuadro->setTextura(tex1);
+   cuadro->setCoordenadas();
+   cubo->setTextura(tex1);
+   cubo->setCoordenadas();
 }
 
 //**************************************************************************
@@ -171,27 +174,29 @@ void Escena::dibujar()
 
       glShadeModel(GL_FLAT);
    }
-   
+
    glEnable(GL_TEXTURE_2D);
-   tex1.activar();
 
    glPushMatrix();
+      glTranslatef(100, 0, 0);
       cuadro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
-   /*glPushMatrix();
-      mol->cambiarColor(1.0, 0, 0);
-      mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();*/
-
-   /*glPushMatrix();
-      glTranslatef(0, 170, 0);
+   glPushMatrix();
+      glTranslatef(65, 100, 0);
       glScalef(0.5, 0.5, 0.5);
       cubo->cambiarColor(1.0, 0, 0);
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
+   glDisable(GL_TEXTURE_2D);
+
    glPushMatrix();
+      mol->cambiarColor(1.0, 0, 0);
+      mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
+
+   /*glPushMatrix();
       glTranslatef(100, 0, 0);
       tetraedro->cambiarColor(1.0, 0, 0);
       tetraedro->draw(modoDibujado, puntos, lineas, solido);

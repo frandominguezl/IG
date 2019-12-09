@@ -22,3 +22,14 @@ Cuadro::Cuadro()
     c.push_back(c3);
     c.push_back(c4);
 }
+
+// Coordenadas de textura
+void Cuadro::setCoordenadas()
+{
+    // Creamos la tabla de coordenadas
+    Tupla2f co1(0.0, 0.0), co2(1, 0.0), co3(0.0, 1), co4(1, 1);
+    this->ct.push_back(co1);
+    this->ct.push_back(co2);
+    this->ct.push_back(co3);
+    this->ct.push_back(co4);
+}

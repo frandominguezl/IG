@@ -30,7 +30,7 @@ void Malla3D::draw_ModoInmediato(int modoDibujado)
    }
 
    // Tabla de texturas
-   if(!ct.empty()){
+   if(!ct.empty() && tex != nullptr){
       glEnableClientState(GL_TEXTURE_COORD_ARRAY);
       glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
    }
@@ -189,8 +189,8 @@ void Malla3D::draw(int modoDibujado, bool puntos, bool lineas, bool solido)
    if(mat != nullptr)
       mat->aplicar();
 
-   if(ct.empty())
-      calcularCoordenadas();
+   if(tex != nullptr)
+      tex->activar();
    
    if(nv.empty())
       calcular_normales();
@@ -257,17 +257,6 @@ void Malla3D::calcular_normales()
     nv[f[i](1)] = (nv[f[i](1)] + nc[i]).normalized();
     nv[f[i](2)] = (nv[f[i](2)] + nc[i]).normalized();
   }
-}
-
-// Función para calcular las coordenadas de textura
-void Malla3D::calcularCoordenadas()
-{
-   // Creamos la tabla de coordenadas
-   Tupla2f co1(0.0, 0.0), co2(this->tex->getWidth(), 0.0), co3(0.0, this->tex->getHeight()), co4(this->tex->getWidth(), this->tex->getHeight());
-   this->ct.push_back(co1);
-   this->ct.push_back(co2);
-   this->ct.push_back(co3);
-   this->ct.push_back(co4);
 }
 
 // Función para establecer el material

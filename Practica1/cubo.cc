@@ -63,3 +63,19 @@ Cubo::Cubo(float lado)
    //  de las agujas del reloj, cuando esa cara se observa desde el exterior del cubo)
 
 }
+
+// Coordenadas de textura
+void Cubo::setCoordenadas()
+{
+    // Creamos la tabla de coordenadas
+    Tupla2f co1(0.0, 0.0), co2(1, 0.0), co3(0.0, 1), co4(1, 1),
+            co5(0.0, 0.0), co6(1, 0.0), co7(0.0, 1), co8(1, 1);
+    this->ct.push_back(co1);
+    this->ct.push_back(co2);
+    this->ct.push_back(co3);
+    this->ct.push_back(co4);
+    this->ct.push_back(co5);
+    this->ct.push_back(co6);
+    this->ct.push_back(co7);
+    this->ct.push_back(co8);
+}

@@ -8,6 +8,7 @@ class Cuadro : public Malla3D
 {
     public:
 	Cuadro();
+    void setCoordenadas();
 };
 
 #endif
