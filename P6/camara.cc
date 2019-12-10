@@ -8,7 +8,7 @@ Camara::Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float fovY, float 
 {
     this->eye = eye;
     this->at = at;
-    this->up = up;
+    this->up = up.normalized();
     this->tipo = tipo;
     this->fovY = fovY;
     this->aspect = aspect;
@@ -42,7 +42,7 @@ void Camara::rotarYFirstPerson(float angle){};
 // Trasladar la cámara
 void Camara::mover(float x, float y, float z)
 {
-    glTranslatef(x, y, z);
+    this->eye = {x, y, z};
 }
 
 // Zoom en la escena
@@ -64,5 +64,6 @@ void Camara::setObserver()
 // Proyección de la escena
 void Camara::setProyeccion()
 {
-    gluPerspective(fovY, aspect, near, far);
+    if(tipo == 1)
+        gluPerspective(fovY, aspect, near, far);
 }
