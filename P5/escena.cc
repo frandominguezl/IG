@@ -94,7 +94,7 @@ void Escena::animarModeloJerarquico()
 {
    static float anguloEje, anguloCabezalY, anguloCabezalZ, altura;
    static int pausa = 0;
-   static Tupla3f posicion{200, 200, 200};
+   static Tupla3f posicion{0, 0, 0};
 
    if(animate){
          switch(pausa){
@@ -132,9 +132,29 @@ void Escena::animarModeloJerarquico()
    }
 
    if(animatePuntual){
-      posicion[0] -= 1.0;
-      posicion[1] -= 1.0;
-      posicion[2] -= 1.0;
+      static bool first = true, next = false;
+      
+      if(first){
+         posicion[0] += 20.0;
+         posicion[1] += 20.0;
+         posicion[2] += 20.0;
+
+         if(posicion[0] == 200){
+            next = true;
+            first = false;
+         }
+      }
+
+      if(next){
+         posicion[0] -= 20.0;
+         posicion[1] -= 20.0;
+         posicion[2] -= 20.0;
+
+         if(posicion[0] == -200){
+            next = false;
+            first = true;
+         }
+      }
    }
 
    mol->setRotacionEje(anguloEje*fVGrado0*factorVelocidad);
