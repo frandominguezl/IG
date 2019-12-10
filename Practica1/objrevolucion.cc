@@ -8,18 +8,18 @@
 ObjRevolucion::ObjRevolucion(){};
 
 // Constructor por parámetros
-ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf)
+ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf, bool conTextura)
 {
     std::vector<Tupla3f> vertices;
     // Leemos los vértices del archivo
     ply::read_vertices(archivo, vertices);
-    crearMalla(vertices, num_instancias);
+    crearMalla(vertices, num_instancias, conTextura);
 }
 
 // Constructor por parámetros
-ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bool tapa_sup, bool tapa_inf)
+ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bool tapa_sup, bool tapa_inf, bool conTextura)
 {
-    crearMalla(perfil, num_instancias);
+    crearMalla(perfil, num_instancias, conTextura);
 }
 
 std::vector<Tupla3f> ObjRevolucion::voltearVertices(const std::vector<Tupla3f> & perfil_original){
@@ -35,7 +35,7 @@ std::vector<Tupla3f> ObjRevolucion::voltearVertices(const std::vector<Tupla3f> &
 }
 
 // Crear Malla
-void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf)
+void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, bool conTextura)
 {
     Tupla3f v_aux; // Vértice auxiliar
     Tupla3f tapaInf, tapaSup;
@@ -72,16 +72,29 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, con
     }
 
     // Generamos la tabla de vértices
-    for(int i=0; i < num_instancias_perf; i++){
-        for(int j=0; j < perfil.size(); j++){
-            v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
-            v_aux(1) = perfil[j](1);
-            v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
+    if(conTextura){
+        calcularCoordTextura(perfil, num_instancias_perf);
+        for(int i=0; i < num_instancias_perf; i++){
+            for(int j=0; j < perfil.size(); j++){
+                v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
+                v_aux(1) = perfil[j](1);
+                v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
 
-            this->v.push_back(v_aux);
+                this->v.push_back(v_aux);
+            }
         }
     }
+    else{
+        for(int i=0; i < num_instancias_perf; i++){
+            for(int j=0; j < perfil.size(); j++){
+                v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
+                v_aux(1) = perfil[j](1);
+                v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
 
+                this->v.push_back(v_aux);
+            }
+        }
+    }
     // Una vez generada la tabla de vértices, le añadimos las tapas
     this->v.push_back(tapaSup);
     this->v.push_back(tapaInf);
@@ -136,6 +149,12 @@ void ObjRevolucion::draw_ModoInmediato(int modoDibujado, bool tapas)
         case 1: glColorPointer(3, GL_FLOAT, 0, cPuntos.data()); break;
         case 2: glColorPointer(3, GL_FLOAT, 0, cLineas.data()); break;
         case 3: glColorPointer(3, GL_FLOAT, 0, c.data()); break;
+    }
+
+    // Tabla de texturas
+    if(!ct.empty() && tex != nullptr){
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
     }
 
     // Tabla de triángulos
@@ -274,11 +293,14 @@ void ObjRevolucion::draw_Chess(bool tapas)
 
 void ObjRevolucion::draw(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas)
 {
-    mat->aplicar();
+    if(mat != nullptr)
+        mat->aplicar();
 
-    if(nv.empty()){
+    if(tex != nullptr)
+        tex->activar();
+
+    if(nv.empty())
         calcular_normales();
-    }
 
     if(puntos){
         glPolygonMode(GL_FRONT_AND_BACK, GL_POINT);
@@ -310,6 +332,29 @@ void ObjRevolucion::draw(int modoDibujado, bool puntos, bool lineas, bool solido
             case 1: draw_ModoInmediato(3, tapas); break;
             case 2: draw_ModoDiferido(3, tapas); break;
             case 3: draw_Chess(tapas); break;
+        }
+    }
+}
+
+// Calcular coordenadas de textura
+void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil, int num_instancias_perf)
+{   
+    std::vector<float> distancias;
+    float s, t;
+    distancias.reserve(num_instancias_perf);
+    distancias[0] = 0;
+
+    // Calculamos las distancias primeramente
+    for(int i=0; i < perfil.size(); i++){
+        distancias[i+1] = distancias[i] + (perfil[i+1] - perfil[i]).lengthSq();
+    }
+
+    for(int i=0; i < num_instancias_perf; i++){
+        for(int j=0; j < perfil.size(); j++){
+            s = i/(perfil.size()-1);
+            t = distancias[j]/distancias[num_instancias_perf-1];
+
+            this->ct.push_back(Tupla2f(s, t));
         }
     }
 }

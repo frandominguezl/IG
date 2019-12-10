@@ -6,6 +6,11 @@
 
 class Cilindro : public ObjRevolucion
 {
+	int num_instancias_perfil;
+	float altura;
+	float radio;
+	std::vector<Tupla3f> perfil;
+
 public:
 	Cilindro();
 	Cilindro(const int num_instancias_perfil, const float altura, const float radio);

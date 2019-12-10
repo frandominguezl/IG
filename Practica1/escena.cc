@@ -61,12 +61,13 @@ Escena::Escena()
 
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
+   tex2 = Textura("img/text-lata-1.jpg", 2);
    cuadro->setTextura(tex1);
    cuadro->setCoordenadas();
    cubo->setTextura(tex1);
    cubo->setCoordenadas();
+   cilindro1->setTextura(tex2);
 }
-
 //**************************************************************************
 // inicialización de la escena (se ejecuta cuando ya se ha creado la ventana, por
 // tanto sí puede ejecutar ordenes de OpenGL)
@@ -198,6 +199,13 @@ void Escena::dibujar()
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
+   glPushMatrix();
+      glTranslatef(-100, 0, -100);
+      glScalef(3,3,3);
+      cilindro1->cambiarColor(1.0, 0, 0);
+      cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
+
    glDisable(GL_TEXTURE_2D);
 
    glPushMatrix();
@@ -223,16 +231,9 @@ void Escena::dibujar()
       glScalef(3,3,3);
       ply1->cambiarColor(1.0, 0, 0);
       ply1->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();
+   glPopMatrix();*/
 
-   glPushMatrix();
-      glTranslatef(-100, 0, -100);
-      glScalef(3,3,3);
-      cilindro1->cambiarColor(1.0, 0, 0);
-      cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
-
-   glPushMatrix();
+   /*glPushMatrix();
       glTranslatef(100, 0, -100);
       glScalef(25, 25, 25);
       peon2->cambiarColor(1.0, 0, 0);

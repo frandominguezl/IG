@@ -73,6 +73,7 @@ class Escena
 
     // Texturas
     Textura tex1;
+    Textura tex2;
 
     // Modelo Jerárquico
     Molino * mol = nullptr;

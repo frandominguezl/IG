@@ -19,12 +19,8 @@ Textura::Textura(std::string archivo, GLuint id){
     this->width = pimg->tamX();
     this->height = pimg->tamY();
 
-    // Leemos los texels aplicando reflejo horizontal
-    for(int i=0; i<this->width; i++){
-        for(int j=0; j<this->height; j++){
-            this->data.push_back(this->pimg->leerPixel(i, j));
-        }
-    }
+    // Leemos los texels 
+    this->data = pimg->leerPixels();
 }
 
 // Función activar
@@ -47,5 +43,5 @@ void Textura::activar()
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
-    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, pimg->leerPixels());
+    gluBuild2DMipmaps(GL_TEXTURE_2D, GL_RGB, width, height, GL_RGB, GL_UNSIGNED_BYTE, data);
 }

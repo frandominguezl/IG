@@ -31,8 +31,8 @@ class ObjRevolucion : public Malla3D
         int num_instancias = 0;
 
         ObjRevolucion();
-        ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true) ;
-        ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bool tapa_sup=true, bool tapa_inf=true) ;
+        ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, bool conTextura=false) ;
+        ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, bool conTextura=false) ;
 
         // dibuja el objeto en modo inmediato
         // int modoDibujado = (1 = puntos, 2 = lineas, 3 = solido)
@@ -53,12 +53,11 @@ class ObjRevolucion : public Malla3D
         // bool solido = Activa/Desactiva la visualización en solido
         void draw(int modoDibujado, bool puntos, bool lineas, bool solido, bool tapas) ;
 
-        // Función para el cálculo de las coordenadas de texturas
-        void calcularCoordTextura();
-
     protected:
         std::vector<Tupla3f> voltearVertices(const std::vector<Tupla3f> & perfil_original);
-        void crearMalla(const std::vector<Tupla3f> & perfil_original, const int num_instancias_perf);
+        void crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, bool conTextura=false);
+        // Función para el cálculo de las coordenadas de texturas
+        void calcularCoordTextura(const std::vector<Tupla3f> & perfil, int num_instancias_perf);
 } ;
 
 #endif

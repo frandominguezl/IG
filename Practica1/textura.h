@@ -10,7 +10,7 @@ using namespace jpg;
 class Textura
 {
 	GLuint textura_id = 0;
-    std::vector<unsigned char*> data;
+    unsigned char* data;
     Imagen* pimg = nullptr;
     unsigned int width, height;
 
