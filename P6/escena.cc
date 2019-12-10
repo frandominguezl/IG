@@ -149,6 +149,36 @@ void Escena::animarModeloJerarquico()
    cuadroLuces[0]->setPosicion(posicion);
 }
 
+// Función para controlar los botones del ratón
+void Escena::clickRaton(int boton, int estado, int x, int y)
+{
+   switch(boton){
+      case GLUT_LEFT_BUTTON: 
+         if(estado == GLUT_UP){
+            cuadroCamaras[camaraActiva]->mover(x, y, 0);
+            moviendoCamaraFP = true;
+         }
+
+         else{
+            moviendoCamaraFP = false;
+         }
+      break;
+
+      case GLUT_MIDDLE_BUTTON: break;
+      case GLUT_RIGHT_BUTTON: break;
+   }
+}
+
+// Función para controlar el movimiento del ratón
+void Escena::ratonMovido(int x, int y)
+{
+   if(moviendoCamaraFP){
+      cuadroCamaras[camaraActiva]->girar(x-xant, y-yant, 0);
+      xant = x;
+      yant = y;
+   }
+}
+
 // **************************************************************************
 //
 // función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,

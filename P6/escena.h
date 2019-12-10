@@ -110,6 +110,10 @@ class Escena
     // Cámara activa
     int camaraActiva = 0;
 
+    // Estado del ratón
+    bool moviendoCamaraFP = false;
+    int xant = 0, yant = 0;
+
     // Booleano para activar/desactivar animación
     bool animate = false;
     bool animatePuntual = false;
@@ -133,6 +137,8 @@ class Escena
 	void inicializar( int UI_window_width, int UI_window_height );
 	void redimensionar( int newWidth, int newHeight ) ;
     void animarModeloJerarquico();
+    void clickRaton(int boton, int estado, int x, int y);
+    void ratonMovido(int x, int y);
 
 	// Dibujar
 	void dibujar() ;

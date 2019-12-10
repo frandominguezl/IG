@@ -16,13 +16,34 @@ Camara::Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float fovY, float 
     this->far = far;
 }
 
+// Girar cámara con ratón
+void Camara::girar(int x, int y, int z)
+{
+    glRotatef(x, 1, 0, 0);
+    glRotatef(y, 0, 1, 0);
+    glRotatef(z, 0, 0, 1);
+}
+
+// Rotar en X
 void Camara::rotarXExaminar(float angle){};
+
+// Rotar en Y
 void Camara::rotarYExaminar(float angle){};
+
+// Rotar en Z
 void Camara::rotarZExaminar(float angle){};
+
+// Rotar en X en primera persona
 void Camara::rotarXFirstPerson(float angle){};
+
+// Rotar en Y en primera persona
 void Camara::rotarYFirstPerson(float angle){};
-void Camara::rotarZFirstPerson(float angle){};
-void Camara::mover(float x, float y, float z){};
+
+// Trasladar la cámara
+void Camara::mover(float x, float y, float z)
+{
+    glTranslatef(x, y, z);
+}
 
 // Zoom en la escena
 void Camara::zoom(float factor)

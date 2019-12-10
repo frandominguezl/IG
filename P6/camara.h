@@ -17,6 +17,7 @@ class Camara
     public:
         Camara();
         Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float fovY, float aspect, float near, float far);
+        void girar(int x, int y, int z);
         void rotarXExaminar(float angle);
         void rotarYExaminar(float angle);
         void rotarZExaminar(float angle);
