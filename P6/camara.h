@@ -5,6 +5,8 @@
 
 class Camara
 {
+    const float PI = 3.14159265;
+    
     private:
         Tupla3f eye;
         Tupla3f at;
@@ -17,13 +19,12 @@ class Camara
     public:
         Camara();
         Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float fovY, float aspect, float near, float far);
-        void girar(int x, int y, int z);
+        void girar(float angulo, char eje, int vec);
         void rotarXExaminar(float angle);
         void rotarYExaminar(float angle);
         void rotarZExaminar(float angle);
         void rotarXFirstPerson(float angle);
         void rotarYFirstPerson(float angle);
-        void rotarZFirstPerson(float angle);
         void mover(float x, float y, float z);
         void zoom(float factor);
         void setObserver();

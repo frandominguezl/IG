@@ -41,7 +41,7 @@ Escena::Escena()
    cuadroLuces[1] = new LuzDireccional({0, 0}, GL_LIGHT2, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
 
    // Cámaras
-   cuadroCamaras[0] = new Camara({1, 1, 0}, {1, 1, 0}, {1, 1, 0}, 1, 45.0, 16/9, 50.0, 2000.0);
+   cuadroCamaras[0] = new Camara({0, 0, 600}, {0, 0, 0}, {0, 1, 0}, 1, 45.0, 1/1, 50.0, 2000.0);
    cuadroCamaras[1] = new Camara({1, 1, 0}, {1, 1, 0}, {1, 1, 0}, 1, 45.0, 16/9, 50.0, 2000.0);
    cuadroCamaras[2] = new Camara({1, 1, 0}, {1, 1, 0}, {1, 1, 0}, 0, 45.0, 16/9, 50.0, 2000.0);
 
@@ -173,7 +173,8 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
 void Escena::ratonMovido(int x, int y)
 {
    if(moviendoCamaraFP){
-      cuadroCamaras[camaraActiva]->girar(x-xant, y-yant, 0);
+      cuadroCamaras[camaraActiva]->rotarXFirstPerson(x-xant);
+      cuadroCamaras[camaraActiva]->rotarYFirstPerson(y-yant);
       xant = x;
       yant = y;
    }
@@ -448,6 +449,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          modoCamara = !modoCamara;
       break;
 
+      case 'Z':
+         cuadroCamaras[camaraActiva]->zoom(16.0);
+      break;
+
       case '0' :
          if (modoIluminacion){
             luces[0] = !luces[0];
@@ -546,16 +551,16 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         Observer_angle_y-- ;
+         cuadroCamaras[camaraActiva]->rotarYFirstPerson(1);
          break;
 	   case GLUT_KEY_RIGHT:
-         Observer_angle_y++ ;
+         cuadroCamaras[camaraActiva]->rotarYFirstPerson(-1);
          break;
 	   case GLUT_KEY_UP:
-         Observer_angle_x-- ;
+         cuadroCamaras[camaraActiva]->rotarXFirstPerson(1);
          break;
 	   case GLUT_KEY_DOWN:
-         Observer_angle_x++ ;
+         cuadroCamaras[camaraActiva]->rotarXFirstPerson(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
          Observer_distance *=1.2 ;
