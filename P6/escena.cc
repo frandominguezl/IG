@@ -153,9 +153,8 @@ void Escena::animarModeloJerarquico()
 void Escena::clickRaton(int boton, int estado, int x, int y)
 {
    switch(boton){
-      case GLUT_LEFT_BUTTON: 
-         if(estado == GLUT_UP){
-            cuadroCamaras[camaraActiva]->mover(x, y, 0);
+      case GLUT_RIGHT_BUTTON: 
+         if(estado == GLUT_DOWN){
             moviendoCamaraFP = true;
          }
 
@@ -164,8 +163,17 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
          }
       break;
 
-      case GLUT_MIDDLE_BUTTON: break;
-      case GLUT_RIGHT_BUTTON: break;
+      case GLUT_LEFT_BUTTON: break;
+
+      // Rueda del ratón hacia arriba
+      case 3:
+         cuadroCamaras[camaraActiva]->zoom(20.0);
+      break;
+
+      // Rueda del ratón hacia abajo
+      case 4:
+         cuadroCamaras[camaraActiva]->zoom(-20.0);
+      break;
    }
 }
 
@@ -173,11 +181,22 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
 void Escena::ratonMovido(int x, int y)
 {
    if(moviendoCamaraFP){
-      cuadroCamaras[camaraActiva]->rotarXFirstPerson(x-xant);
-      cuadroCamaras[camaraActiva]->rotarYFirstPerson(y-yant);
+      cuadroCamaras[camaraActiva]->girar(x-xant, 'x', 0);
+      cuadroCamaras[camaraActiva]->girar(x-xant, 'x', 1);
+      cuadroCamaras[camaraActiva]->girar(y-yant, 'y', 0);
+      cuadroCamaras[camaraActiva]->girar(y-yant, 'y', 1);
+
       xant = x;
       yant = y;
    }
+}
+
+// Dibujar el objeto seleccionado
+void Escena::dibujaSelecion()
+{
+   glDisable(GL_DITHER);
+
+   glEnable(GL_DITHER);
 }
 
 // **************************************************************************
@@ -447,10 +466,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
       case 'C':
          modoCamara = !modoCamara;
-      break;
-
-      case 'Z':
-         cuadroCamaras[camaraActiva]->zoom(16.0);
       break;
 
       case '0' :

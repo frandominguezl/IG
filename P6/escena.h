@@ -139,6 +139,7 @@ class Escena
     void animarModeloJerarquico();
     void clickRaton(int boton, int estado, int x, int y);
     void ratonMovido(int x, int y);
+    void dibujaSelecion();
 
 	// Dibujar
 	void dibujar() ;
