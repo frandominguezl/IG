@@ -181,10 +181,24 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
 void Escena::ratonMovido(int x, int y)
 {
    if(moviendoCamaraFP){
-      cuadroCamaras[camaraActiva]->girar(x-xant, 'x', 0);
-      cuadroCamaras[camaraActiva]->girar(x-xant, 'x', 1);
-      cuadroCamaras[camaraActiva]->girar(y-yant, 'y', 0);
-      cuadroCamaras[camaraActiva]->girar(y-yant, 'y', 1);
+      float rotX, rotY;
+
+      if(x-xant > 0.1)
+         rotX = 0.1;
+
+      else
+         rotX = x-xant;
+
+      if(y-yant > 0.1)
+         rotY = 0.1;
+
+      else
+         rotY = y-yant;
+
+      cuadroCamaras[camaraActiva]->girar(rotX, 'x', 0);
+      cuadroCamaras[camaraActiva]->girar(rotX, 'x', 1);
+      cuadroCamaras[camaraActiva]->girar(rotY, 'y', 0);
+      cuadroCamaras[camaraActiva]->girar(rotY, 'y', 1);
 
       xant = x;
       yant = y;
