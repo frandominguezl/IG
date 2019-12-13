@@ -137,6 +137,7 @@ void Escena::animarModeloJerarquico()
       if(first){
          posicion[0] += 20.0;
          posicion[1] += 20.0;
+            //animatePuntual = !animatePuntual;
          posicion[2] += 20.0;
 
          if(posicion[0] == 200){
@@ -208,21 +209,21 @@ void Escena::dibujar()
 
    glPushMatrix();
       glTranslatef(100, 0, 0);
-      cuadro->cambiarColor(1.0, 0.0, 0.0);
+      cuadro->cambiarColor(1.0, 1.0, 1.0);
       cuadro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
    glPushMatrix();
       glTranslatef(65, 100, 0);
       glScalef(0.5, 0.5, 0.5);
-      cubo->cambiarColor(1.0, 0, 0);
+      cubo->cambiarColor(1.0, 1.0, 1.0);
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
    glPushMatrix();
       glTranslatef(-100, 0, -100);
       glScalef(3,3,3);
-      cilindro1->cambiarColor(1.0, 0, 0);
+      cilindro1->cambiarColor(1.0, 1.0, 1.0);
       cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
@@ -382,6 +383,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
          else if (modoIluminacion){
             selecComponente = 0;
+            animate = !animate;
+            animatePuntual = !animatePuntual;
          }
 
          else{

@@ -342,6 +342,7 @@ void ObjRevolucion::draw(int modoDibujado, bool puntos, bool lineas, bool solido
 void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
 {   
     std::vector<float> distancias;
+    std::vector<Tupla2f> aux;
     float s, t;
     distancias.push_back(0);
 
@@ -355,9 +356,13 @@ void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
             s = i/(this->N-1);
             t = distancias[j]/distancias[this->M-1];
 
-            this->ct.push_back(Tupla2f(s, t));
+            aux.push_back(Tupla2f(s, t));
         }
     }
+
+    // Metemos los vértices en orden inverso
+    for(int i = aux.size(); i > 0; i--)
+        this->ct.push_back(aux[i]);
 }
 
 // Norma euclídea de dos puntos
