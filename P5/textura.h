@@ -13,6 +13,7 @@ class Textura
     unsigned char* data;
     Imagen* pimg = nullptr;
     unsigned int width, height;
+    bool enabled = false;
 
     public:
     Textura();

@@ -10,6 +10,9 @@ ObjRevolucion::ObjRevolucion(){};
 // Constructor por parámetros
 ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf, bool conTextura)
 {
+    this->M = archivo.size();
+    this->N = num_instancias;
+
     std::vector<Tupla3f> vertices;
     // Leemos los vértices del archivo
     ply::read_vertices(archivo, vertices);
@@ -19,6 +22,8 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
 // Constructor por parámetros
 ObjRevolucion::ObjRevolucion(std::vector<Tupla3f> perfil, int num_instancias, bool tapa_sup, bool tapa_inf, bool conTextura)
 {
+    this->M = perfil.size();
+    this->N = num_instancias;
     crearMalla(perfil, num_instancias, conTextura);
 }
 
@@ -37,6 +42,12 @@ std::vector<Tupla3f> ObjRevolucion::voltearVertices(const std::vector<Tupla3f> &
 // Crear Malla
 void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, bool conTextura)
 {
+    if(this->M == 0)
+        this->M = perfil_original.size();
+
+    if(this->N == 0)
+        this->N = num_instancias_perf;
+
     Tupla3f v_aux; // Vértice auxiliar
     Tupla3f tapaInf, tapaSup;
     std::vector<Tupla3f> perfil;
@@ -73,28 +84,19 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
 
     // Generamos la tabla de vértices
     if(conTextura){
-        calcularCoordTextura(perfil, num_instancias_perf);
-        for(int i=0; i < num_instancias_perf; i++){
-            for(int j=0; j < perfil.size(); j++){
-                v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
-                v_aux(1) = perfil[j](1);
-                v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
+        calcularCoordTextura(perfil);
+    }
 
-                this->v.push_back(v_aux);
-            }
+    for(int i=0; i < num_instancias_perf; i++){
+        for(int j=0; j < perfil.size(); j++){
+            v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
+            v_aux(1) = perfil[j](1);
+            v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
+
+            this->v.push_back(v_aux);
         }
     }
-    else{
-        for(int i=0; i < num_instancias_perf; i++){
-            for(int j=0; j < perfil.size(); j++){
-                v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
-                v_aux(1) = perfil[j](1);
-                v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
-
-                this->v.push_back(v_aux);
-            }
-        }
-    }
+    
     // Una vez generada la tabla de vértices, le añadimos las tapas
     this->v.push_back(tapaSup);
     this->v.push_back(tapaInf);
@@ -121,13 +123,13 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
     for(int i=0; i < num_instancias_perf; i++){
         Tupla3i caraSup(perfil.size()*((i+1)%num_instancias_perf),perfil.size()*i,num_instancias_perf*perfil.size());
         this->f.push_back(caraSup);
-        this->num_instancias++;
+        this->instancias_triangulos++;
     }
 
     for(int i=0; i < num_instancias_perf; i++){
         Tupla3i caraInf(num_instancias_perf*perfil.size()+1,perfil.size()*(i+1)-1,perfil.size()*(((i+1)%num_instancias_perf)+1)-1);
         this->f.push_back(caraInf);
-        this->num_instancias++;
+        this->instancias_triangulos++;
     }
 }
 
@@ -163,7 +165,7 @@ void ObjRevolucion::draw_ModoInmediato(int modoDibujado, bool tapas)
     }
 
     else{
-        glDrawElements(GL_TRIANGLES, f.size()*3-num_instancias*3, GL_UNSIGNED_INT, f.data());
+        glDrawElements(GL_TRIANGLES, f.size()*3-instancias_triangulos*3, GL_UNSIGNED_INT, f.data());
     }
 
     glDisableClientState(GL_COLOR_ARRAY);
@@ -230,7 +232,7 @@ void ObjRevolucion::draw_ModoDiferido(int modoDibujado, bool tapas)
    }
 
    else{
-        glDrawElements(GL_TRIANGLES, f.size()*3-num_instancias*3, GL_UNSIGNED_INT, f.data());
+        glDrawElements(GL_TRIANGLES, f.size()*3-instancias_triangulos*3, GL_UNSIGNED_INT, f.data());
    }
    
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -274,7 +276,7 @@ void ObjRevolucion::draw_Chess(bool tapas)
    }
 
    else{
-       glDrawElements(GL_TRIANGLES, 3*fpar.size()-(num_instancias/2)*3, GL_UNSIGNED_INT, fpar.data());
+       glDrawElements(GL_TRIANGLES, 3*fpar.size()-(instancias_triangulos/2)*3, GL_UNSIGNED_INT, fpar.data());
    }
 
    glColorPointer(3, GL_FLOAT, 0, cimpar.data());
@@ -284,7 +286,7 @@ void ObjRevolucion::draw_Chess(bool tapas)
     }
 
     else{
-        glDrawElements(GL_TRIANGLES, 3*fimpar.size()-(num_instancias/2)*3, GL_UNSIGNED_INT, fimpar.data());
+        glDrawElements(GL_TRIANGLES, 3*fimpar.size()-(instancias_triangulos/2)*3, GL_UNSIGNED_INT, fimpar.data());
     }
 
    glDisableClientState(GL_COLOR_ARRAY);
@@ -337,24 +339,35 @@ void ObjRevolucion::draw(int modoDibujado, bool puntos, bool lineas, bool solido
 }
 
 // Calcular coordenadas de textura
-void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil, int num_instancias_perf)
+void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
 {   
     std::vector<float> distancias;
     float s, t;
-    distancias.reserve(num_instancias_perf);
-    distancias[0] = 0;
+    distancias.push_back(0);
 
     // Calculamos las distancias primeramente
-    for(int i=0; i < perfil.size(); i++){
-        distancias[i+1] = distancias[i] + (perfil[i+1] - perfil[i]).lengthSq();
+    for(int i = 1; i < this->M; i++){
+        distancias[i] = distancias[i-1] + distanciaVertices(perfil[i-1], perfil[i]);
     }
 
-    for(int i=0; i < num_instancias_perf; i++){
-        for(int j=0; j < perfil.size(); j++){
-            s = i/(perfil.size()-1);
-            t = distancias[j]/distancias[num_instancias_perf-1];
+    for(float i=0; i < this->N; i++){
+        for(float j=0; j < this->M; j++){
+            s = i/(this->N-1);
+            t = distancias[j]/distancias[this->M-1];
 
             this->ct.push_back(Tupla2f(s, t));
         }
     }
+}
+
+// Norma euclídea de dos puntos
+double ObjRevolucion::distanciaVertices(Tupla3f anterior, Tupla3f siguiente)
+{
+    double x, y, z;
+
+    x = pow(anterior[0] - siguiente[0], 2);
+    y = pow(anterior[1] - siguiente[1], 2);
+    z = pow(anterior[2] - siguiente[2], 2);
+
+    return sqrt(x+y+z);
 }

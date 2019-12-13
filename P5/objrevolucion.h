@@ -28,7 +28,8 @@ class ObjRevolucion : public Malla3D
 {
     public:
         const float PI = 3.14159265;
-        int num_instancias = 0;
+        int instancias_triangulos = 0;
+        int M = 0, N = 0;
 
         ObjRevolucion();
         ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup=true, bool tapa_inf=true, bool conTextura=false) ;
@@ -57,7 +58,8 @@ class ObjRevolucion : public Malla3D
         std::vector<Tupla3f> voltearVertices(const std::vector<Tupla3f> & perfil_original);
         void crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, bool conTextura=false);
         // Función para el cálculo de las coordenadas de texturas
-        void calcularCoordTextura(const std::vector<Tupla3f> & perfil, int num_instancias_perf);
+        void calcularCoordTextura(const std::vector<Tupla3f> & perfil);
+        double distanciaVertices(Tupla3f anterior, Tupla3f siguiente);
 } ;
 
 #endif
