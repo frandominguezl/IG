@@ -40,6 +40,9 @@ Escena::Escena()
    cuadroLuces[0] = new LuzPosicional({0, 0, 0}, GL_LIGHT1, {0.2, 0.2, 0.2, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
    cuadroLuces[1] = new LuzDireccional({0, 0}, GL_LIGHT2, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0}, {1.0, 1.0, 1.0, 1.0});
 
+   // Cámaras
+   cuadroCamaras[0] = new Camara({0, 0, 600}, {0, 0, 0}, {0, 1, 0}, 1, 50, 50);
+
    // Materiales
    Tupla4f ambiente1(0.135, 0.2225, 0.1575, 0.1), especular1(0.0, 0.0, 0.0, 0.1), difuso1(0.786, 0.89, 0.97, 0.1);
    Tupla4f ambiente2(0.0215,	0.1745, 0.0215, 0.6), especular2(0.7038, 0.27048, 0.0828, 0.6), difuso2(0.0, 0.0, 0.0, 0.6);
@@ -81,6 +84,8 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    glEnable(GL_DEPTH_TEST);   // se habilita el z-bufer
    glEnable(GL_CULL_FACE);    // no dibujar las caras traseras
    glEnable(GL_NORMALIZE);    // Flag para evitar que las transformaciones alteren las normales
+   glEnable(GL_DITHER);  
+   glDisable(GL_LIGHTING);
 
    Width  = UI_window_width/10;
    Height = UI_window_height/10;
@@ -165,6 +170,50 @@ void Escena::animarModeloJerarquico()
    cuadroLuces[0]->setPosicion(posicion);
 }
 
+// Función para controlar los botones del ratón
+void Escena::clickRaton(int boton, int estado, int x, int y)
+{
+   switch(boton){
+      case GLUT_RIGHT_BUTTON: 
+         if(estado == GLUT_DOWN){
+            moviendoCamaraFP = true;
+            xant = x;
+            yant = y;
+         }
+
+         else{
+            moviendoCamaraFP = false;
+         }
+      break;
+
+      case GLUT_LEFT_BUTTON: break;
+
+      // Rueda del ratón hacia arriba
+      case 3:
+         if(estado == GLUT_UP)
+            cuadroCamaras[camaraActiva]->zoom(20.0);
+      break;
+
+      // Rueda del ratón hacia abajo
+      case 4:
+         if(estado == GLUT_UP)
+            cuadroCamaras[camaraActiva]->zoom(-20.0);
+      break;
+   }
+}
+
+// Función para controlar el movimiento del ratón
+void Escena::ratonMovido(int x, int y)
+{
+   if(moviendoCamaraFP){
+      cuadroCamaras[camaraActiva]->rotarXFirstPerson((x-xant)*0.1);
+      cuadroCamaras[camaraActiva]->rotarYFirstPerson((y-yant)*0.1);
+
+      xant = x;
+      yant = y;
+   }
+}
+
 // **************************************************************************
 //
 // función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,
@@ -176,7 +225,6 @@ void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 	change_observer();
-   glDisable(GL_LIGHTING);
    ejes.draw();
 
    if(modoIluminacion){
@@ -514,16 +562,16 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         Observer_angle_y-- ;
+         cuadroCamaras[camaraActiva]->rotarYExaminar(-1);
          break;
 	   case GLUT_KEY_RIGHT:
-         Observer_angle_y++ ;
+         cuadroCamaras[camaraActiva]->rotarYExaminar(1);
          break;
 	   case GLUT_KEY_UP:
-         Observer_angle_x-- ;
+         cuadroCamaras[camaraActiva]->rotarXExaminar(1);
          break;
 	   case GLUT_KEY_DOWN:
-         Observer_angle_x++ ;
+         cuadroCamaras[camaraActiva]->rotarXExaminar(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
          Observer_distance *=1.2 ;
@@ -547,8 +595,7 @@ void Escena::change_projection( const float ratio_xy )
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
-   const float wx = float(Height)*ratio_xy ;
-   glFrustum( -wx, wx, -Height, Height, Front_plane, Back_plane );
+   cuadroCamaras[camaraActiva]->setProyeccion();
 }
 //**************************************************************************
 // Funcion que se invoca cuando cambia el tamaño de la ventana
@@ -571,7 +618,5 @@ void Escena::change_observer()
    // posicion del observador
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
-   glTranslatef( 0.0, 0.0, -Observer_distance );
-   glRotatef( Observer_angle_y, 0.0 ,1.0, 0.0 );
-   glRotatef( Observer_angle_x, 1.0, 0.0, 0.0 );
+   cuadroCamaras[camaraActiva]->setObserver();
 }
