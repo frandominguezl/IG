@@ -65,9 +65,9 @@ void Camara::mover(float x, float y, float z)
 
 // Zoom en la escena
 void Camara::zoom(float factor)
-{
+{   
     if(this->fovY-factor >= 1 && this->fovY-factor <= 180)
-        this->fovY -= factor; 
+        this->fovY -= factor;
 
     this->left = tan((this->fovY/2)*(PI/180)) * this->near;
     this->top = this->left * this->aspect;
@@ -112,7 +112,7 @@ void Camara::rotarFirstPerson(float angle, char eje)
     else if(eje == 'y'){
         newAt = matrizRotacion(ejeX, vectorDirector, angle);
         newUp = matrizRotacion(ejeX, up, angle);
-        ejeX = matrizRotacion(ejeX, ejeY, angle);        
+        ejeY = matrizRotacion(ejeX, ejeY, angle);        
     }
 
     // Cambiamos hacia donde estamos mirando
@@ -136,15 +136,15 @@ void Camara::rotarExaminar(float angle, char eje)
 
     // Usamos la matriz de rotación
     if(eje == 'x'){
-        newAt = matrizRotacion(ejeY, vD, angle);
+        vD = matrizRotacion(ejeY, vD, angle);
         newUp = matrizRotacion(ejeY, up, angle);
         ejeX = matrizRotacion(ejeY, ejeX, angle);
     }
 
     else if(eje == 'y'){
-        newAt = matrizRotacion(ejeX, vD, angle);
+        vD = matrizRotacion(ejeX, vD, angle);
         newUp = matrizRotacion(ejeX, up, angle);
-        ejeX = matrizRotacion(ejeX, ejeY, angle);        
+        ejeY = matrizRotacion(ejeX, ejeY, angle);        
     }
 
     // Cambiamos hacia donde estamos mirando

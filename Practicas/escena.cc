@@ -190,14 +190,12 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
 
       // Rueda del ratón hacia arriba
       case 3:
-         if(estado == GLUT_UP)
-            cuadroCamaras[camaraActiva]->zoom(20.0);
+            cuadroCamaras[camaraActiva]->zoom(1.0);
       break;
 
       // Rueda del ratón hacia abajo
       case 4:
-         if(estado == GLUT_UP)
-            cuadroCamaras[camaraActiva]->zoom(-20.0);
+            cuadroCamaras[camaraActiva]->zoom(-1.0);
       break;
    }
 }
@@ -224,6 +222,7 @@ void Escena::ratonMovido(int x, int y)
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
+   change_projection(1);
 	change_observer();
    ejes.draw();
 
@@ -562,16 +561,16 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
    switch ( Tecla1 )
    {
 	   case GLUT_KEY_LEFT:
-         cuadroCamaras[camaraActiva]->rotarYExaminar(-1);
+         cuadroCamaras[camaraActiva]->rotarXExaminar(-1);
          break;
 	   case GLUT_KEY_RIGHT:
-         cuadroCamaras[camaraActiva]->rotarYExaminar(1);
-         break;
-	   case GLUT_KEY_UP:
          cuadroCamaras[camaraActiva]->rotarXExaminar(1);
          break;
+	   case GLUT_KEY_UP:
+         cuadroCamaras[camaraActiva]->rotarYExaminar(1);
+         break;
 	   case GLUT_KEY_DOWN:
-         cuadroCamaras[camaraActiva]->rotarXExaminar(-1);
+         cuadroCamaras[camaraActiva]->rotarYExaminar(-1);
          break;
 	   case GLUT_KEY_PAGE_UP:
          Observer_distance *=1.2 ;
