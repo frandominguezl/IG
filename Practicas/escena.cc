@@ -66,12 +66,12 @@ Escena::Escena()
 
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
-   tex2 = Textura("img/text-lata-1.jpg", 2);
-   cuadro->setTextura(tex1);
+   tex2 = Textura("img/maxresdefault.jpg", 2);
+   cuadro->setTextura(tex2);
    cuadro->setCoordenadas();
    cubo->setTextura(tex1);
    cubo->setCoordenadas();
-   cilindro1->setTextura(tex2);
+   //cilindro1->setTextura(tex2);
 }
 //**************************************************************************
 // inicialización de la escena (se ejecuta cuando ya se ha creado la ventana, por
@@ -144,7 +144,6 @@ void Escena::animarModeloJerarquico()
       if(first){
          posicion[0] += 20.0;
          posicion[1] += 20.0;
-            //animatePuntual = !animatePuntual;
          posicion[2] += 20.0;
 
          if(posicion[0] == 200){
@@ -257,7 +256,9 @@ void Escena::dibujar()
    glEnable(GL_TEXTURE_2D);
 
    glPushMatrix();
-      glTranslatef(100, 0, 0);
+      glTranslatef(-250, 500, -500);
+      glScalef(5, 5, 5);
+      glRotatef(-90, 0, 0, 1);
       cuadro->cambiarColor(1.0, 1.0, 1.0);
       cuadro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
@@ -269,22 +270,22 @@ void Escena::dibujar()
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
+   glDisable(GL_TEXTURE_2D);
+
    glPushMatrix();
       glTranslatef(-100, 0, -100);
       glScalef(3,3,3);
-      cilindro1->cambiarColor(1.0, 1.0, 1.0);
+      cilindro1->cambiarColor(0.6, 0.3, 0.3);
       cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
-
-   glDisable(GL_TEXTURE_2D);
 
    glPushMatrix();
       mol->cambiarColor(1.0, 0, 0);
       mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 
-   /*glPushMatrix();
-      glTranslatef(100, 0, 0);
+   glPushMatrix();
+      glTranslatef(0, 0, -100);
       tetraedro->cambiarColor(1.0, 0, 0);
       tetraedro->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
@@ -301,9 +302,9 @@ void Escena::dibujar()
       glScalef(3,3,3);
       ply1->cambiarColor(1.0, 0, 0);
       ply1->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();*/
+   glPopMatrix();
 
-   /*glPushMatrix();
+   glPushMatrix();
       glTranslatef(100, 0, -100);
       glScalef(25, 25, 25);
       peon2->cambiarColor(1.0, 0, 0);
@@ -313,9 +314,9 @@ void Escena::dibujar()
    glPushMatrix();
       glTranslatef(100, 0, 100);
       glScalef(5,5,5);
-      esfera1->cambiarColor(1.0, 0, 0);
+      esfera1->cambiarColor(1, 0.9, 0.1);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();*/
+   glPopMatrix();
 }
 
 //**************************************************************************
@@ -437,10 +438,6 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             animate = !animate;
             animatePuntual = !animatePuntual;
          }
-
-         else{
-            animate = !animate;
-         }
       break;
 
       case 'B' :
@@ -491,12 +488,12 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case '0' :
          if (modoIluminacion){
             luces[0] = !luces[0];
-            std::cout<<"Luz 0 activada\n";
+            std::cout<<"\tLuz 0 activada\n";
          }
 
          else if (!modoIluminacion && !animate && !modoCamara){
             gradoLibertad = 0;
-            std::cout<<"Seleccionado grado de libertad 0\n";
+            std::cout<<"\tSeleccionado grado de libertad 0\n";
          }
 
          else if (modoCamara){
@@ -509,17 +506,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case '1' :
         if (modoMenu == SELDIBUJADO){
           modoDibujado = 1;
-          std::cout<<"Modo de dibujado: Inmediato\n";
+          std::cout<<"\tModo de dibujado: Inmediato\n";
         }
 
         else if (modoIluminacion){
            luces[1] = !luces[1];
-           std::cout<<"Luz 1 activada\n";
+           std::cout<<"\tLuz 1 activada\n";
         }
 
         else if (!modoIluminacion && !animate && !modoCamara){
            gradoLibertad = 1;
-           std::cout<<"Seleccionado grado de libertad 1\n";
+           std::cout<<"\tSeleccionado grado de libertad 1\n";
         }
 
         else if (modoCamara){
@@ -532,17 +529,17 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       case '2' :
         if (modoMenu == SELDIBUJADO){
           modoDibujado = 2;
-          std::cout<<"Modo de dibujado: Diferido\n";
+          std::cout<<"\tModo de dibujado: Diferido\n";
         }
 
         else if (modoIluminacion){
            luces[2] = !luces[2];
-           std::cout<<"Luz 2 activada\n";
+           std::cout<<"\tLuz 2 activada\n";
         }
 
         else if (!modoIluminacion && !animate && !modoCamara){
            gradoLibertad = 2;
-           std::cout<<"Seleccionado grado de libertad 2\n";
+           std::cout<<"\tSeleccionado grado de libertad 2\n";
         }
 
         else if (modoCamara){
@@ -557,8 +554,9 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             luces[3] = !luces[3];
          }
 
-         else if (!modoIluminacion && !animate){
+         else if (!modoIluminacion && !animate && !modoCamara){
            gradoLibertad = 3;
+           std::cout<<"\tSeleccionado grado de libertad 3\n";
         }
 
         else if (modoCamara){
@@ -566,6 +564,7 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 
            if(cuadroCamaras[3] != nullptr)
                camaraActiva = 3;
+               std::cout<<"\tCámara 3 activada\n";
         }
       break;  
 

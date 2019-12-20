@@ -17,19 +17,15 @@ Camara::Camara(Tupla3f eye, Tupla3f at, Tupla3f up, int tipo, float alto, float 
     this->fovY = atan(left/near)*(180/PI)*2;
     this->aspect = ancho/alto;
 
-    // Dirección de la visión
-    this->vectorDirector = {at[0] - eye[0], at[1] - eye[1], at[2] - eye[2]};
+    // Vector director
+    this->vectorDirector = at - eye;
 
-    // Eje X
-    this->ejeX = {(vectorDirector[1] * up[2]) - (vectorDirector[2] * up[1]),
-                  (vectorDirector[2] * up[0]) - (vectorDirector[0] * up[2]),
-                  (vectorDirector[0] * up[1]) - (vectorDirector[1] * up[0])};
+    // Eje X. Producto vectorial entre el vector director y up.
+    this->ejeX = vectorDirector.cross(up);
     this->ejeX = this->ejeX.normalized();
 
-    // Eje Y
-    this->ejeY = {(ejeX[1] * vectorDirector[2]) - (ejeX[2] * vectorDirector[1]),
-                  (ejeX[2] * vectorDirector[0]) - (ejeX[0] * vectorDirector[2]),
-                  (ejeX[0] * vectorDirector[1]) - (ejeX[1] * vectorDirector[0])};
+    // Eje Y. Producto vectorial entre ejeX y vector director.
+    this->ejeY = ejeX.cross(vectorDirector);
     this->ejeY = this->ejeY.normalized();
 }
 
@@ -98,8 +94,9 @@ void Camara::rotarFirstPerson(float angle, char eje)
     Tupla3f newAt, newUp;
 
     // Vector dirección
-    this->vectorDirector = {at[0] - eye[0], at[1] - eye[1], at[2] - eye[2]};
+    this->vectorDirector = at - eye;
 
+    // Trabajamos mejor en radianes
     angle *= (PI/180);
 
     // Usamos la matriz de rotación
@@ -116,10 +113,9 @@ void Camara::rotarFirstPerson(float angle, char eje)
     }
 
     // Cambiamos hacia donde estamos mirando
-    this->at[0] = newAt[0] + eye[0];
-    this->at[1] = newAt[1] + eye[1];
-    this->at[2] = newAt[2] + eye[2];
+    this->at = newAt + eye;
 
+    // Actualizamos Up
     this->up = newUp;
 }
 
@@ -130,8 +126,9 @@ void Camara::rotarExaminar(float angle, char eje)
     Tupla3f newAt, newUp, vD;
 
     // Vector dirección
-    vD = {eye[0] - at[0], eye[1] - at[1], eye[2] - at[2]};
+    vD = eye - at;
 
+    // Trabajamos mejor en radianes
     angle *= (PI/180);
 
     // Usamos la matriz de rotación
@@ -148,10 +145,9 @@ void Camara::rotarExaminar(float angle, char eje)
     }
 
     // Cambiamos hacia donde estamos mirando
-    this->eye[0] = at[0] + vD[0];
-    this->eye[1] = at[1] + vD[1];
-    this->eye[2] = at[2] + vD[2];
+    this->eye = at + vD;
 
+    // Actualizamos Up
     this->up = newUp;
 }
 
