@@ -67,11 +67,14 @@ Escena::Escena()
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
    tex2 = Textura("img/maxresdefault.jpg", 2);
+   tex3 = Textura("img/text-lata-1.jpg", 3);
+   tex4 = Textura("img/mundo.jpg", 4);
    cuadro->setTextura(tex2);
    cuadro->setCoordenadas();
    cubo->setTextura(tex1);
    cubo->setCoordenadas();
-   //cilindro1->setTextura(tex2);
+   cilindro1->setTextura(tex3);
+   esfera1->setTextura(tex4);
 }
 //**************************************************************************
 // inicialización de la escena (se ejecuta cuando ya se ha creado la ventana, por
@@ -92,7 +95,7 @@ void Escena::inicializar( int UI_window_width, int UI_window_height )
    Width  = UI_window_width/10;
    Height = UI_window_height/10;
 
-   change_projection( float(UI_window_width)/float(UI_window_height) );
+   change_projection();
    glViewport( 0, 0, UI_window_width, UI_window_height );
 }
 
@@ -223,8 +226,9 @@ void Escena::ratonMovido(int x, int y)
 void Escena::dibujar()
 {
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
-   change_projection(1);
+   change_projection();
 	change_observer();
+   glDisable(GL_LIGHTING);
    ejes.draw();
 
    if(modoIluminacion){
@@ -270,14 +274,21 @@ void Escena::dibujar()
       cubo->draw(modoDibujado, puntos, lineas, solido);
    glPopMatrix();
 
-   glDisable(GL_TEXTURE_2D);
+   glPushMatrix();
+      glTranslatef(100, 0, 100);
+      glScalef(5,5,5);
+      esfera1->cambiarColor(1.0, 1.0, 1.0);
+      esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
+   glPopMatrix();
 
    glPushMatrix();
       glTranslatef(-100, 0, -100);
       glScalef(3,3,3);
-      cilindro1->cambiarColor(0.6, 0.3, 0.3);
+      cilindro1->cambiarColor(1.0, 1.0, 1.0);
       cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
+
+   glDisable(GL_TEXTURE_2D);
 
    glPushMatrix();
       mol->cambiarColor(1.0, 0, 0);
@@ -309,13 +320,6 @@ void Escena::dibujar()
       glScalef(25, 25, 25);
       peon2->cambiarColor(1.0, 0, 0);
       peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
-
-   glPushMatrix();
-      glTranslatef(100, 0, 100);
-      glScalef(5,5,5);
-      esfera1->cambiarColor(1, 0.9, 0.1);
-      esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();
 }
 
@@ -437,6 +441,10 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
             selecComponente = 0;
             animate = !animate;
             animatePuntual = !animatePuntual;
+         }
+
+         else{
+            animate = !animate;
          }
       break;
 
@@ -659,7 +667,7 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
 //
 //***************************************************************************
 
-void Escena::change_projection( const float ratio_xy )
+void Escena::change_projection()
 {
    glMatrixMode( GL_PROJECTION );
    glLoadIdentity();
@@ -673,7 +681,7 @@ void Escena::redimensionar( int newWidth, int newHeight )
 {
    Width  = newWidth/10;
    Height = newHeight/10;
-   change_projection( float(newHeight)/float(newWidth) );
+   change_projection();
    glViewport( 0, 0, newWidth, newHeight );
 }
 

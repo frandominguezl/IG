@@ -356,6 +356,8 @@ void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
             s = i/(this->N-1);
             t = distancias[j]/distancias[this->M-1];
 
+            std::cout<<"Coord: " << s << ", " << t << std::endl;
+
             aux.push_back(Tupla2f(s, t));
         }
     }

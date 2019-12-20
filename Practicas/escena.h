@@ -37,7 +37,7 @@ class Escena
     GLfloat Width, Height, Front_plane, Back_plane;
 
     // Transformación de cámara
-    void change_projection( const float ratio_xy );
+    void change_projection();
     void change_observer();
 
 
@@ -75,6 +75,8 @@ class Escena
     // Texturas
     Textura tex1;
     Textura tex2;
+    Textura tex3;
+    Textura tex4;
 
     // Modelo Jerárquico
     Molino * mol = nullptr;
