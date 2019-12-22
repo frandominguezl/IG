@@ -14,6 +14,7 @@ class Cilindro : public ObjRevolucion
 public:
 	Cilindro();
 	Cilindro(const int num_instancias_perfil, const float altura, const float radio);
+	void setEjeRevolucion(char eje);
 };
 
 #endif

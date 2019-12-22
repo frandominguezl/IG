@@ -22,11 +22,13 @@ Escena::Escena()
    ply1 = new ObjPLY("plys/ant.ply");
 
    // Cargamos objetos de revolución
-   peon1 = new ObjRevolucion("plys/peon.ply", 50);
-   peon2 = new ObjRevolucion("plys/peon.ply", 50);
+   peon1 = new ObjRevolucion("plys/peon.ply", 50, 3);
+   peon2 = new ObjRevolucion("plys/peon.ply", 50, 0);
    cilindro1 = new Cilindro(50, 50, 10);
+   cilindro1->setEjeRevolucion('z');
    cono1 = new Cono(50, 30, 10);
    esfera1 = new Esfera(50, 50, 10);
+   esfera1->setEjeRevolucion('z');
 
    // Cargamos los objetos básicos
    cubo = new Cubo();
@@ -310,7 +312,7 @@ void Escena::dibujar()
    glPopMatrix();
 
    glPushMatrix();
-      glTranslatef(-100, 0, 0);
+      glTranslatef(-200, 0, 0);
       glScalef(3,3,3);
       ply1->cambiarColor(1.0, 0, 0);
       ply1->draw(modoDibujado, puntos, lineas, solido);

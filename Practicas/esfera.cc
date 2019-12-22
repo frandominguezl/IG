@@ -8,7 +8,8 @@ Esfera::Esfera(){};
 
 Esfera::Esfera(const int num_vert_perfil, const int num_instancias_perfil, const float radio)
 {
-	std::vector<Tupla3f> perfil;
+    this->num_instancias_perfil = num_instancias_perfil;
+	this->radio = radio;
 	
     for(int i=0; i < num_vert_perfil; i++){
         Tupla3f aux;
@@ -20,5 +21,15 @@ Esfera::Esfera(const int num_vert_perfil, const int num_instancias_perfil, const
     }
 
 	// Llamamos a crearMalla
-	crearMalla(perfil, num_instancias_perfil, true);
+	crearMalla(perfil, num_instancias_perfil, 0, true);
+}
+
+// Revolucionar entorno a un eje
+void Esfera::setEjeRevolucion(char eje)
+{
+	switch(eje){
+		case 'x': crearMalla(this->perfil, this->num_instancias_perfil, 1, true);
+		case 'y': crearMalla(this->perfil, this->num_instancias_perfil, 2, true);
+		case 'z': crearMalla(this->perfil, this->num_instancias_perfil, 3, true);
+	}
 }

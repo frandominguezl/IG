@@ -8,7 +8,7 @@
 ObjRevolucion::ObjRevolucion(){};
 
 // Constructor por parámetros
-ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bool tapa_sup, bool tapa_inf, bool conTextura)
+ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, int ejeRevolucion, bool tapa_sup, bool tapa_inf, bool conTextura)
 {
     this->M = archivo.size();
     this->N = num_instancias;
@@ -16,7 +16,8 @@ ObjRevolucion::ObjRevolucion(const std::string & archivo, int num_instancias, bo
     std::vector<Tupla3f> vertices;
     // Leemos los vértices del archivo
     ply::read_vertices(archivo, vertices);
-    crearMalla(vertices, num_instancias, conTextura);
+    
+    crearMalla(vertices, num_instancias, ejeRevolucion, conTextura);
 }
 
 // Constructor por parámetros
@@ -39,8 +40,165 @@ std::vector<Tupla3f> ObjRevolucion::voltearVertices(const std::vector<Tupla3f> &
     return volteado;
 }
 
+void ObjRevolucion::gestionarTapas(std::vector<Tupla3f>& perfil, int eje)
+{
+    // ¿Tapa superior?
+    if(eje == 2){
+        if(perfil[0](0) == 0.0 && perfil[0](1) == 0.0){
+            this->tapaSup = perfil[0];
+            perfil.erase(perfil.begin());
+        }
+
+        else{
+            this->tapaSup(0) = 0.0;
+            this->tapaSup(1) = perfil[0](1);
+            this->tapaSup(2) = 0.0;
+        }
+    }
+
+    else if(eje == 1){
+        if(perfil[0](1) == 0.0 && perfil[0](2) == 0.0){
+            this->tapaSup = perfil[0];
+            perfil.erase(perfil.begin());
+        }
+
+        else{
+            this->tapaSup(0) = perfil[0](0);
+            this->tapaSup(1) = 0.0;
+            this->tapaSup(2) = 0.0;
+        }
+    }
+
+    else if(eje == 3){
+        if(perfil[0](0) == 0.0 && perfil[0](2) == 0.0){
+            this->tapaSup = perfil[0];
+            perfil.erase(perfil.begin());
+        }
+
+        else{
+            this->tapaSup(0) = 0.0;
+            this->tapaSup(1) = 0.0;
+            this->tapaSup(2) = perfil[0](2);
+        }
+    }
+
+    // ¿Tapa inferior?
+    if(eje == 2){
+        if(perfil[perfil.size()-1](0) == 0.0 && perfil[perfil.size()-1](1) == 0.0){
+            this->tapaInf = perfil[perfil.size()-1];
+            perfil.pop_back();
+        }
+
+        else{
+            this->tapaInf(0) = 0.0;
+            this->tapaInf(1) = perfil[perfil.size()-1](1);
+            this->tapaInf(2) = 0.0;
+        }
+    }
+
+    else if(eje == 1){
+        if(perfil[perfil.size()-1](1) == 0.0 && perfil[perfil.size()-1](2) == 0.0){
+            this->tapaInf = perfil[perfil.size()-1];
+            perfil.pop_back();
+        }
+
+        else{
+            this->tapaInf(0) = perfil[perfil.size()-1](0);
+            this->tapaInf(1) = 0.0;
+            this->tapaInf(2) = 0.0;
+        }
+    }
+
+    else if(eje == 3){
+        if(perfil[perfil.size()-1](0) == 0.0 && perfil[perfil.size()-1](2) == 0.0){
+            this->tapaInf = perfil[perfil.size()-1];
+            perfil.pop_back();
+        }
+
+        else{
+            this->tapaInf(0) = 0.0;
+            this->tapaInf(1) = 0.0;
+            this->tapaInf(2) = perfil[perfil.size()-1](2);
+        }
+    }
+}
+
+void ObjRevolucion::generarVertices(std::vector<Tupla3f>& perfil, int eje)
+{
+    Tupla3f v_aux;
+
+    if(eje == 2){
+        for(int i=0; i < this->N; i++){
+            for(int j=0; j < perfil.size(); j++){
+                v_aux(0) = perfil[j](0)*cos((2*PI*i)/this->N);
+                v_aux(1) = perfil[j](1);
+                v_aux(2) = perfil[j](0)*sin((2*PI*i)/this->N);
+
+                this->v.push_back(v_aux);
+            }
+        }
+    }
+
+    else if(eje == 1){
+        for(int i=0; i < this->N; i++){
+            for(int j=0; j < perfil.size(); j++){
+                v_aux(0) = perfil[j](0);
+                v_aux(1) = perfil[j](0)*-sin((2*PI*i)/this->N);
+                v_aux(2) = perfil[j](0)*cos((2*PI*i)/this->N);
+
+                this->v.push_back(v_aux);
+            }
+        } 
+    }
+
+    else if(eje == 3){
+        for(int i=0; i < this->N; i++){
+            for(int j=0; j < perfil.size(); j++){
+                v_aux(0) = perfil[j](0)*sin((2*PI*i)/this->N);
+                v_aux(1) = perfil[j](0)*cos((2*PI*i)/this->N);
+                v_aux(2) = perfil[j](2);
+
+                this->v.push_back(v_aux);
+            }
+        }        
+    }
+}
+
+// Revolucionar sobre un eje
+std::vector<Tupla3f> ObjRevolucion::revolucionarEnEje(std::vector<Tupla3f>& perfil, int ejeRevolucion)
+{
+    std::vector<Tupla3f> resultado;
+    Tupla3f v_aux;
+
+    if(ejeRevolucion == 2){
+        resultado = perfil;
+    }
+
+    else if(ejeRevolucion == 1){
+        for(int i = 0; i < perfil.size(); i++){
+            v_aux(0) = perfil[i](0);
+            v_aux(1) = 0.0;
+            v_aux(2) = perfil[i](1);
+
+            resultado.push_back(v_aux);
+        }
+    }
+
+    else if(ejeRevolucion == 3){
+        for(int i = 0; i < perfil.size(); i++){
+            v_aux(0) = perfil[i](0);
+            v_aux(1) = 0.0;
+            v_aux(2) = perfil[i](1);
+
+            resultado.push_back(v_aux);
+        }
+    }
+
+    return resultado;
+}
+
 // Crear Malla
-void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, bool conTextura)
+void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, int ejeRevolucion, bool conTextura)
 {
     if(this->M == 0)
         this->M = perfil_original.size();
@@ -49,53 +207,30 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
         this->N = num_instancias_perf;
 
     Tupla3f v_aux; // Vértice auxiliar
-    Tupla3f tapaInf, tapaSup;
     std::vector<Tupla3f> perfil;
 
+    // Volteamos los vértices si están en orden ascendente
     perfil = (perfil_original[0](1) < perfil_original[perfil_original.size()-1](1)) ? voltearVertices(perfil_original) : perfil_original;
-    
+
+    if(ejeRevolucion == 0)
+        ejeRevolucion = 2;
+
+    // Proyectamos los vértices según el eje indicado
+    perfil = revolucionarEnEje(perfil, ejeRevolucion);
+
     // Nos aseguramos de que la tabla de vértices está vacía
     this->v.clear();
 
     // Comprobamos si tiene tapas, si es así, las sacamos
-    // ¿Tapa superior?
-    if(perfil[0](0) == 0.0 && perfil[0](1) == 0.0){
-        tapaSup = perfil[0];
-        perfil.erase(perfil.begin());
-    }
-
-    else{
-        tapaSup(0) = 0.0;
-        tapaSup(1) = perfil[0](1);
-        tapaSup(2) = 0.0;
-    }
-
-    // ¿Tapa inferior?
-    if(perfil[perfil.size()-1](0) == 0.0 && perfil[perfil.size()-1](1) == 0.0){
-        tapaInf = perfil[perfil.size()-1];
-        perfil.pop_back();
-    }
-
-    else{
-        tapaInf(0) = 0.0;
-        tapaInf(1) = perfil[perfil.size()-1](1);
-        tapaInf(2) = 0.0;
-    }
+    gestionarTapas(perfil, ejeRevolucion);
 
     // Generamos la tabla de vértices
     if(conTextura){
         calcularCoordTextura(perfil);
     }
 
-    for(int i=0; i < num_instancias_perf; i++){
-        for(int j=0; j < perfil.size(); j++){
-            v_aux(0) = perfil[j](0)*cos((2*PI*i)/num_instancias_perf);
-            v_aux(1) = perfil[j](1);
-            v_aux(2) = perfil[j](0)*sin((2*PI*i)/num_instancias_perf);
-
-            this->v.push_back(v_aux);
-        }
-    }
+    // Generamos los vértices
+    generarVertices(perfil, ejeRevolucion);
     
     // Una vez generada la tabla de vértices, le añadimos las tapas
     this->v.push_back(tapaSup);
@@ -121,13 +256,13 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
 
     // Una vez generada la tabla de triángulos, le añadimos los triángulos de las tapas
     for(int i=0; i < num_instancias_perf; i++){
-        Tupla3i caraSup(perfil.size()*((i+1)%num_instancias_perf),perfil.size()*i,num_instancias_perf*perfil.size());
+        Tupla3i caraSup(perfil.size()*((i+1)%num_instancias_perf), perfil.size()*i, num_instancias_perf*perfil.size());
         this->f.push_back(caraSup);
         this->instancias_triangulos++;
     }
 
     for(int i=0; i < num_instancias_perf; i++){
-        Tupla3i caraInf(num_instancias_perf*perfil.size()+1,perfil.size()*(i+1)-1,perfil.size()*(((i+1)%num_instancias_perf)+1)-1);
+        Tupla3i caraInf(num_instancias_perf*perfil.size()+1, perfil.size()*(i+1)-1, perfil.size()*(((i+1)%num_instancias_perf)+1)-1);
         this->f.push_back(caraInf);
         this->instancias_triangulos++;
     }
