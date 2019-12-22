@@ -26,7 +26,7 @@ Escena::Escena()
    peon2 = new ObjRevolucion("plys/peon.ply", 50);
    cilindro1 = new Cilindro(50, 50, 10);
    cono1 = new Cono(50, 30, 10);
-   esfera1 = new Esfera(50, 20, 10);
+   esfera1 = new Esfera(50, 50, 10);
 
    // Cargamos los objetos básicos
    cubo = new Cubo();
@@ -277,6 +277,7 @@ void Escena::dibujar()
    glPushMatrix();
       glTranslatef(100, 0, 100);
       glScalef(5,5,5);
+      glRotatef(180, 1, 0, 0);
       esfera1->cambiarColor(1.0, 1.0, 1.0);
       esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
    glPopMatrix();

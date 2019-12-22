@@ -344,6 +344,7 @@ void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
     std::vector<float> distancias;
     std::vector<Tupla2f> aux;
     float s, t;
+    distancias.resize(this->M+1);
     distancias.push_back(0);
 
     // Calculamos las distancias primeramente
@@ -355,8 +356,6 @@ void ObjRevolucion::calcularCoordTextura(const std::vector<Tupla3f> & perfil)
         for(float j=0; j < this->M; j++){
             s = i/(this->N-1);
             t = distancias[j]/distancias[this->M-1];
-
-            std::cout<<"Coord: " << s << ", " << t << std::endl;
 
             aux.push_back(Tupla2f(s, t));
         }

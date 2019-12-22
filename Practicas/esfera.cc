@@ -20,5 +20,5 @@ Esfera::Esfera(const int num_vert_perfil, const int num_instancias_perfil, const
     }
 
 	// Llamamos a crearMalla
-	crearMalla(perfil, num_instancias_perfil);
+	crearMalla(perfil, num_instancias_perfil, true);
 }
