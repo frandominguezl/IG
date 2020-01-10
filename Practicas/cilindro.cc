@@ -24,9 +24,12 @@ Cilindro::Cilindro(const int num_instancias_perfil, const float altura, const fl
 // Revolucionar entorno a un eje
 void Cilindro::setEjeRevolucion(char eje)
 {
-	switch(eje){
-		case 'x': crearMalla(this->perfil, this->num_instancias_perfil, 1, true);
-		case 'y': crearMalla(this->perfil, this->num_instancias_perfil, 2, true);
-		case 'z': crearMalla(this->perfil, this->num_instancias_perfil, 3, true);
-	}
+	if(eje == 'x')
+		crearMalla(this->perfil, this->num_instancias_perfil, 1, true);
+
+	if(eje == 'y')	
+		crearMalla(this->perfil, this->num_instancias_perfil, 2, true);
+
+	if(eje == 'z')
+		crearMalla(this->perfil, this->num_instancias_perfil, 3, true);
 }

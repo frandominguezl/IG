@@ -127,6 +127,7 @@ void ObjRevolucion::generarVertices(std::vector<Tupla3f>& perfil, int eje)
 {
     Tupla3f v_aux;
 
+    // Eje Y
     if(eje == 2){
         for(int i=0; i < this->N; i++){
             for(int j=0; j < perfil.size(); j++){
@@ -139,18 +140,20 @@ void ObjRevolucion::generarVertices(std::vector<Tupla3f>& perfil, int eje)
         }
     }
 
+    // Eje X
     else if(eje == 1){
         for(int i=0; i < this->N; i++){
             for(int j=0; j < perfil.size(); j++){
                 v_aux(0) = perfil[j](0);
-                v_aux(1) = perfil[j](0)*-sin((2*PI*i)/this->N);
-                v_aux(2) = perfil[j](0)*cos((2*PI*i)/this->N);
+                v_aux(1) = perfil[j](1)*cos((2*PI*i)/this->N);
+                v_aux(2) = perfil[j](1)*sin((2*PI*i)/this->N);
 
                 this->v.push_back(v_aux);
             }
         } 
     }
 
+    // Eje Z
     else if(eje == 3){
         for(int i=0; i < this->N; i++){
             for(int j=0; j < perfil.size(); j++){
@@ -170,20 +173,23 @@ std::vector<Tupla3f> ObjRevolucion::revolucionarEnEje(std::vector<Tupla3f>& perf
     std::vector<Tupla3f> resultado;
     Tupla3f v_aux;
 
+    // Eje Y
     if(ejeRevolucion == 2){
         resultado = perfil;
     }
 
+    // Eje X
     else if(ejeRevolucion == 1){
         for(int i = 0; i < perfil.size(); i++){
-            v_aux(0) = perfil[i](0);
-            v_aux(1) = 0.0;
-            v_aux(2) = perfil[i](1);
+            v_aux(0) = -perfil[i](1);
+            v_aux(1) = perfil[i](0);
+            v_aux(2) = 0.0;
 
             resultado.push_back(v_aux);
         }
     }
 
+    // Eje Z
     else if(ejeRevolucion == 3){
         for(int i = 0; i < perfil.size(); i++){
             v_aux(0) = perfil[i](0);
@@ -200,6 +206,7 @@ std::vector<Tupla3f> ObjRevolucion::revolucionarEnEje(std::vector<Tupla3f>& perf
 // Crear Malla
 void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, int ejeRevolucion, bool conTextura)
 {
+    //std::cout<<"Primer: "<<ejeRevolucion<<std::endl;
     if(this->M == 0)
         this->M = perfil_original.size();
 
@@ -216,6 +223,7 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
         ejeRevolucion = 2;
 
     // Proyectamos los vértices según el eje indicado
+    //std::cout<<"Seg: "<<ejeRevolucion<<std::endl;
     perfil = revolucionarEnEje(perfil, ejeRevolucion);
 
     // Nos aseguramos de que la tabla de vértices está vacía

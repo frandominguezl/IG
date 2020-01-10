@@ -25,7 +25,7 @@ Escena::Escena()
    peon1 = new ObjRevolucion("plys/peon.ply", 50, 3);
    peon2 = new ObjRevolucion("plys/peon.ply", 50, 0);
    cilindro1 = new Cilindro(50, 50, 10);
-   cilindro1->setEjeRevolucion('z');
+   cilindro1->setEjeRevolucion('x');
    cono1 = new Cono(50, 30, 10);
    esfera1 = new Esfera(50, 50, 10);
    esfera1->setEjeRevolucion('z');
