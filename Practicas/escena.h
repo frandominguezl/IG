@@ -26,22 +26,12 @@ class Escena
 
     private:
 
-    // ** PARÁMETROS DE LA CÁMARA (PROVISIONAL)
-        
-        // variables que definen la posicion de la camara en coordenadas polares
-    GLfloat Observer_distance;
-    GLfloat Observer_angle_x;
-    GLfloat Observer_angle_y;
-
     // variables que controlan la ventana y la transformacion de perspectiva
     GLfloat Width, Height, Front_plane, Back_plane;
 
     // Transformación de cámara
     void change_projection();
     void change_observer();
-
-
-
     void clear_window();
 
     menu modoMenu=NADA;
@@ -132,16 +122,28 @@ class Escena
     // 1 = beta
     int selecComponente = -1;
 
+    // Variables para la selección de la escena
+    int xleido = -1, yleido = -1, objetoActivo = -1;
+    bool rotacionSeleccion = false;
+
    
    public:
 
     Escena();
+    void creacionEscena();
+    void activacionLuces();
+    void coloresOriginales();
 	void inicializar( int UI_window_width, int UI_window_height );
 	void redimensionar( int newWidth, int newHeight ) ;
     void animarModeloJerarquico();
     void clickRaton(int boton, int estado, int x, int y);
     void ratonMovido(int x, int y);
+
+    // INteracción con la escena
     void dibujaSelecion();
+    void coloresSeleccionables();
+    void objetoSeleccionado(int objSelec, Malla3D* obj);
+    void seleccionPixel();
 
 	// Dibujar
 	void dibujar() ;

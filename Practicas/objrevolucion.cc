@@ -206,7 +206,6 @@ std::vector<Tupla3f> ObjRevolucion::revolucionarEnEje(std::vector<Tupla3f>& perf
 // Crear Malla
 void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int num_instancias_perf, int ejeRevolucion, bool conTextura)
 {
-    //std::cout<<"Primer: "<<ejeRevolucion<<std::endl;
     if(this->M == 0)
         this->M = perfil_original.size();
 
@@ -219,11 +218,11 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
     // Volteamos los vértices si están en orden ascendente
     perfil = (perfil_original[0](1) < perfil_original[perfil_original.size()-1](1)) ? voltearVertices(perfil_original) : perfil_original;
 
+    // Revolucionamos en Y por defecto
     if(ejeRevolucion == 0)
         ejeRevolucion = 2;
 
     // Proyectamos los vértices según el eje indicado
-    //std::cout<<"Seg: "<<ejeRevolucion<<std::endl;
     perfil = revolucionarEnEje(perfil, ejeRevolucion);
 
     // Nos aseguramos de que la tabla de vértices está vacía
@@ -231,11 +230,6 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
 
     // Comprobamos si tiene tapas, si es así, las sacamos
     gestionarTapas(perfil, ejeRevolucion);
-
-    // Generamos la tabla de vértices
-    if(conTextura){
-        calcularCoordTextura(perfil);
-    }
 
     // Generamos los vértices
     generarVertices(perfil, ejeRevolucion);
@@ -246,6 +240,13 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
 
     // Nos aseguramos de que el vector de triángulos está vacío
     this->f.clear();
+
+    // Generamos la tabla de vértices
+    if(conTextura){
+        this->v.push_back(perfil[0]);
+        //perfil.push_back(perfil[0]);
+        calcularCoordTextura(perfil);
+    }
 
     // Generamos la tabla de triángulos
     for(int i=0; i < num_instancias_perf; i++){

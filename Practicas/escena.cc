@@ -12,9 +12,6 @@ Escena::Escena()
 {
    Front_plane       = 50.0;
    Back_plane        = 2000.0;
-   Observer_distance = 4*Front_plane;
-   Observer_angle_x  = 0.0 ;
-   Observer_angle_y  = 0.0 ;
 
    ejes.changeAxisSize( 5000 );
 
@@ -78,6 +75,92 @@ Escena::Escena()
    cilindro1->setTextura(tex3);
    esfera1->setTextura(tex4);
 }
+
+/* Dibujando la escena */
+void Escena::creacionEscena()
+{
+   glPushMatrix();
+      glEnable(GL_TEXTURE_2D);
+
+      glPushMatrix();
+         glTranslatef(-250, 500, -500);
+         cuadro->setPosicion({-250, 500, -500});
+         glScalef(5, 5, 5);
+         glRotatef(-90, 0, 0, 1);
+         cuadro->draw(modoDibujado, puntos, lineas, solido);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(65, 100, 0);
+         cubo->setPosicion({65, 100, 0});
+         glScalef(0.5, 0.5, 0.5);
+         cubo->draw(modoDibujado, puntos, lineas, solido);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(100, 0, 100);
+         esfera1->setPosicion({100, 0, 100});
+         glScalef(5,5,5);
+         glRotatef(180, 1, 0, 0);
+         esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(-100, 0, -100);
+         cilindro1->setPosicion({-100, 0, -100});
+         glScalef(3,3,3);
+         cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glDisable(GL_TEXTURE_2D);
+
+      glPushMatrix();
+         mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(0, 0, -100);
+         tetraedro->setPosicion({0, 0, -100});
+         tetraedro->draw(modoDibujado, puntos, lineas, solido);
+      glPopMatrix();
+      
+      glPushMatrix();
+         glTranslatef(0, -50, 0);
+         peon1->setPosicion({0, -50, 0});
+         glScalef(25.0, 25.0, 25.0);
+         peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(-200, 0, 0);
+         ply1->setPosicion({-200, 0, 0});
+         glScalef(3,3,3);
+         //ply1->draw(modoDibujado, puntos, lineas, solido);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(100, 0, -100);
+         peon2->setPosicion({100, 0, -100});
+         glScalef(25, 25, 25);
+         //peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+   glPopMatrix();
+}
+
+/* Los colores originales de los objetos */
+void Escena::coloresOriginales()
+{
+   cuadro->cambiarColor(1.0, 1.0, 1.0);
+   cubo->cambiarColor(1.0, 1.0, 1.0);
+   esfera1->cambiarColor(1.0, 1.0, 1.0);
+   cilindro1->cambiarColor(1.0, 1.0, 1.0);
+   mol->cambiarColor(1.0, 0, 0);
+   tetraedro->cambiarColor(1.0, 0, 0);
+   peon1->cambiarColor(1.0, 0, 0);
+   ply1->cambiarColor(1.0, 0, 0);
+   peon2->cambiarColor(1.0, 0, 0);
+}
+
 //**************************************************************************
 // inicialización de la escena (se ejecuta cuando ya se ha creado la ventana, por
 // tanto sí puede ejecutar ordenes de OpenGL)
@@ -209,30 +292,28 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
 // Función para controlar el movimiento del ratón
 void Escena::ratonMovido(int x, int y)
 {
-   if(moviendoCamaraFP){
-      cuadroCamaras[camaraActiva]->rotarXFirstPerson((x-xant)*0.1);
-      cuadroCamaras[camaraActiva]->rotarYFirstPerson((y-yant)*0.1);
+   if(moviendoCamaraFP)
+   {
+      if(rotacionSeleccion)
+      {
+         cuadroCamaras[camaraActiva]->rotarXExaminar((x-xant)*0.1);
+         cuadroCamaras[camaraActiva]->rotarYExaminar((y-yant)*0.1);
+      }
+
+      else
+      {
+         cuadroCamaras[camaraActiva]->rotarXFirstPerson((x-xant)*0.1);
+         cuadroCamaras[camaraActiva]->rotarYFirstPerson((y-yant)*0.1);
+      }
 
       xant = x;
       yant = y;
    }
 }
 
-// **************************************************************************
-//
-// función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,
-// y dibuja los objetos
-//
-// **************************************************************************
-
-void Escena::dibujar()
+// Activación de luces
+void Escena::activacionLuces()
 {
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
-   change_projection();
-	change_observer();
-   glDisable(GL_LIGHTING);
-   ejes.draw();
-
    if(modoIluminacion){
       if(!glIsEnabled(GL_LIGHTING)){
         glEnable(GL_LIGHTING);
@@ -258,72 +339,120 @@ void Escena::dibujar()
 
       glShadeModel(GL_FLAT);
    }
+}
 
-   glEnable(GL_TEXTURE_2D);
+// **************************************************************************
+//
+// función de dibujo de la escena: limpia ventana, fija cámara, dibuja ejes,
+// y dibuja los objetos
+//
+// **************************************************************************
 
-   glPushMatrix();
-      glTranslatef(-250, 500, -500);
-      glScalef(5, 5, 5);
-      glRotatef(-90, 0, 0, 1);
-      cuadro->cambiarColor(1.0, 1.0, 1.0);
-      cuadro->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();
+void Escena::dibujar()
+{
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 
-   glPushMatrix();
-      glTranslatef(65, 100, 0);
-      glScalef(0.5, 0.5, 0.5);
-      cubo->cambiarColor(1.0, 1.0, 1.0);
-      cubo->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();
-
-   glPushMatrix();
-      glTranslatef(100, 0, 100);
-      glScalef(5,5,5);
-      glRotatef(180, 1, 0, 0);
-      esfera1->cambiarColor(1.0, 1.0, 1.0);
-      esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
-
-   glPushMatrix();
-      glTranslatef(-100, 0, -100);
-      glScalef(3,3,3);
-      cilindro1->cambiarColor(1.0, 1.0, 1.0);
-      cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
-
-   glDisable(GL_TEXTURE_2D);
-
-   glPushMatrix();
-      mol->cambiarColor(1.0, 0, 0);
-      mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
-
-   glPushMatrix();
-      glTranslatef(0, 0, -100);
-      tetraedro->cambiarColor(1.0, 0, 0);
-      tetraedro->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();
+   if(xleido == -1 && yleido == -1)
+      dibujaSelecion();
    
-   glPushMatrix();
-      glTranslatef(0, -50, 0);
-      glScalef(25.0, 25.0, 25.0);
-      peon1->cambiarColor(1.0, 0, 0);
-      peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
+   change_projection();
+	change_observer();
+   glDisable(GL_LIGHTING);
+   ejes.draw();
 
-   glPushMatrix();
-      glTranslatef(-200, 0, 0);
-      glScalef(3,3,3);
-      ply1->cambiarColor(1.0, 0, 0);
-      ply1->draw(modoDibujado, puntos, lineas, solido);
-   glPopMatrix();
+   // Luces, cámaras...
+   activacionLuces();
 
-   glPushMatrix();
-      glTranslatef(100, 0, -100);
-      glScalef(25, 25, 25);
-      peon2->cambiarColor(1.0, 0, 0);
-      peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
-   glPopMatrix();
+   // Acción
+   creacionEscena();
+
+}
+
+// Asignamos los colores a los objetos seleccionables
+void Escena::coloresSeleccionables()
+{
+   peon1->cambiarColor(0.0, 0.0, 0.0);
+   cilindro1->cambiarColor(1.0, 0.0, 0.0);
+   esfera1->cambiarColor(1.0, 1.0, 0.0);
+   cubo->cambiarColor(1.0, 1.0, 1.0);
+}
+
+// Mueve la cámara según el objeto seleccionado. Si vuelve a ser pulsado, volvemos al eje de coordenadas
+void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
+{
+   if(objSelec != objetoActivo)
+   {
+      objetoActivo = objSelec;
+      rotacionSeleccion = true;
+      cuadroCamaras[camaraActiva]->setAt(obj->getPosicion());
+   }
+
+   else
+   {
+      objetoActivo = -1;
+      rotacionSeleccion = false;
+      cuadroCamaras[camaraActiva]->setAt({0, 0, 0});
+   }
+}
+
+// Obtiene el objeto correspondiente al pixel seleccionado
+void Escena::seleccionPixel()
+{
+   GLint viewport[4];
+   GLubyte seleccionado[3];
+
+   // Vuelca el entero del viewport
+   glGetIntegerv(GL_VIEWPORT, viewport);
+
+   // Lee los píxeles
+   glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void*) seleccionado);
+
+   // Seleccionamos ahora el objeto según el píxel seleccionado
+   if(seleccionado[0] == 0.0 && seleccionado[1] == 0.0 && seleccionado[2] == 0.0)
+      objetoSeleccionado(0, peon1);
+
+   else if(seleccionado[0] == 255.0 && seleccionado[1] == 0.0 && seleccionado[2] == 0.0)
+      objetoSeleccionado(1, cilindro1);
+   
+   else if(seleccionado[0] == 255.0 && seleccionado[1] == 255.0 && seleccionado[2] == 0.0)
+      objetoSeleccionado(2, esfera1);
+   
+   else if(seleccionado[0] == 255.0 && seleccionado[1] == 255.0 && seleccionado[2] == 255.0)
+      objetoSeleccionado(3, cubo);
+}
+
+/* Función para dibujar los objetos seleccionados en la escena */
+void Escena::dibujaSelecion()
+{
+   glDisable(GL_DITHER);
+   glDisable(GL_LIGHTING);
+   glDisable(GL_TEXTURE);
+
+   // Preservamos los estados anteriores y activamos el modo sólido
+   int modoDibujado_ant = modoDibujado;
+   bool estadosAnteriores[5] = {puntos, lineas, solido, chess, modoIluminacion};
+   puntos = false, lineas = false, solido = true, chess = false, modoIluminacion = false, modoDibujado = 1;
+
+   // Cambiamos los colores de los objetos a los colores con selección
+   coloresSeleccionables();
+
+   // Creamos la escena
+   creacionEscena();
+
+   // Obtenemos el píxel sobre el que hemos pulsado
+   seleccionPixel();
+
+   // Revertimos los colores iniciales y los estados de la escena
+   coloresOriginales();
+
+   modoDibujado = modoDibujado_ant;
+   puntos = estadosAnteriores[0];
+   lineas = estadosAnteriores[1];
+   solido = estadosAnteriores[2];
+   chess = estadosAnteriores[3];
+   modoIluminacion = estadosAnteriores[4];
+   xleido = -1;
+   yleido = -1;
 }
 
 //**************************************************************************
@@ -651,12 +780,6 @@ void Escena::teclaEspecial( int Tecla1, int x, int y )
          break;
 	   case GLUT_KEY_DOWN:
          cuadroCamaras[camaraActiva]->rotarYExaminar(-1);
-         break;
-	   case GLUT_KEY_PAGE_UP:
-         Observer_distance *=1.2 ;
-         break;
-	   case GLUT_KEY_PAGE_DOWN:
-         Observer_distance /= 1.2 ;
          break;
 	}
 

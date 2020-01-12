@@ -51,6 +51,12 @@ class Malla3D
    // Establecer la textura
    void setTextura(Textura t);
 
+   // Establecer la posición
+   inline void setPosicion(Tupla3f pos){posicion = pos;};
+
+   // Obtener la posición
+   inline Tupla3f getPosicion(){return posicion;};
+
    protected:
 
    // Visualización en Modo Diferido (VBO)
@@ -65,6 +71,7 @@ class Malla3D
    std::vector<Tupla3f> nv; // Vector de normales de los vértices
    std::vector<Tupla3f> nc; // Vector de normales de las caras
    std::vector<Tupla2f> ct; // Tabla de coordenadas de texturas
+   Tupla3f posicion = {0, 0, 0}; // Posición actual de la malla
 
    // Material
    Material* mat = nullptr;

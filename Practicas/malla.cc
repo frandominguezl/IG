@@ -59,7 +59,6 @@ void Malla3D::cambiarColor(float R, float G, float B)
    Tupla3f colorLineas(0.5, 0.5, 0);
 
    for(int i = 0; i < v.size(); i++){
-      Tupla3f color(R, G, B);
       c.push_back(color);
       cPuntos.push_back(colorPuntos);
       cLineas.push_back(colorLineas);
