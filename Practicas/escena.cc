@@ -275,7 +275,12 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
          }
       break;
 
-      case GLUT_LEFT_BUTTON: break;
+      case GLUT_LEFT_BUTTON:
+         if(estado == GLUT_DOWN){
+            xleido = x;
+            yleido = y;
+         }
+      break;
 
       // Rueda del ratón hacia arriba
       case 3:
@@ -350,10 +355,12 @@ void Escena::activacionLuces()
 
 void Escena::dibujar()
 {
-	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
+   glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 
    if(xleido == -1 && yleido == -1)
-      dibujaSelecion();
+      dibujaSeleccion();
+
+	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiamos de nuevo
    
    change_projection();
 	change_observer();
@@ -385,6 +392,7 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
       objetoActivo = objSelec;
       rotacionSeleccion = true;
       cuadroCamaras[camaraActiva]->setAt(obj->getPosicion());
+      std::cout<<"Coord: "<<obj->getPosicion()[0]<<" "<<obj->getPosicion()[1]<<" "<<obj->getPosicion()[2]<<std::endl;
    }
 
    else
@@ -405,7 +413,7 @@ void Escena::seleccionPixel()
    glGetIntegerv(GL_VIEWPORT, viewport);
 
    // Lee los píxeles
-   glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void*) seleccionado);
+   glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *) seleccionado);
 
    // Seleccionamos ahora el objeto según el píxel seleccionado
    if(seleccionado[0] == 0.0 && seleccionado[1] == 0.0 && seleccionado[2] == 0.0)
@@ -422,7 +430,7 @@ void Escena::seleccionPixel()
 }
 
 /* Función para dibujar los objetos seleccionados en la escena */
-void Escena::dibujaSelecion()
+void Escena::dibujaSeleccion()
 {
    glDisable(GL_DITHER);
    glDisable(GL_LIGHTING);
