@@ -135,14 +135,14 @@ void Escena::creacionEscena()
          glTranslatef(-200, 0, 0);
          ply1->setPosicion({-200, 0, 0});
          glScalef(3,3,3);
-         //ply1->draw(modoDibujado, puntos, lineas, solido);
+         ply1->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
 
       glPushMatrix();
          glTranslatef(100, 0, -100);
          peon2->setPosicion({100, 0, -100});
          glScalef(25, 25, 25);
-         //peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
+         peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
    glPopMatrix();
 }
@@ -270,9 +270,6 @@ void Escena::clickRaton(int boton, int estado, int x, int y)
             yant = y;
          }
 
-         else{
-            moviendoCamaraFP = false;
-         }
       break;
 
       case GLUT_LEFT_BUTTON:
@@ -357,11 +354,13 @@ void Escena::dibujar()
 {
    glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiar la pantalla
 
-   if(xleido == -1 && yleido == -1)
+   if(xleido != -1 && yleido != -1)
       dibujaSeleccion();
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiamos de nuevo
    
+   coloresOriginales();
+
    change_projection();
 	change_observer();
    glDisable(GL_LIGHTING);
@@ -378,10 +377,9 @@ void Escena::dibujar()
 // Asignamos los colores a los objetos seleccionables
 void Escena::coloresSeleccionables()
 {
-   peon1->cambiarColor(0.0, 0.0, 0.0);
-   cilindro1->cambiarColor(1.0, 0.0, 0.0);
-   esfera1->cambiarColor(1.0, 1.0, 0.0);
-   cubo->cambiarColor(1.0, 1.0, 1.0);
+   peon1->cambiarColor(0.1, 0.0, 0.0);
+   cilindro1->cambiarColor(0.2, 0.0, 0.0);
+   esfera1->cambiarColor(0.3, 0.0, 0.0);
 }
 
 // Mueve la cámara según el objeto seleccionado. Si vuelve a ser pulsado, volvemos al eje de coordenadas
@@ -389,14 +387,26 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
 {
    if(objSelec != objetoActivo)
    {
+      switch(objSelec)
+      {
+         case 0: std::cout << "Peón seleccionado" << std::endl; break;
+         case 1: std::cout << "Cilindro seleccionado" << std::endl; break;
+         case 2: std::cout << "Esfera seleccionada" << std::endl; break;
+      }
+
       objetoActivo = objSelec;
       rotacionSeleccion = true;
       cuadroCamaras[camaraActiva]->setAt(obj->getPosicion());
-      std::cout<<"Coord: "<<obj->getPosicion()[0]<<" "<<obj->getPosicion()[1]<<" "<<obj->getPosicion()[2]<<std::endl;
    }
 
    else
    {
+      switch(objSelec)
+      {
+         case 0: std::cout << "Peón deseleccionado" << std::endl; break;
+         case 1: std::cout << "Cilindro deseleccionado" << std::endl; break;
+         case 2: std::cout << "Esfera deseleccionada" << std::endl; break;
+      }
       objetoActivo = -1;
       rotacionSeleccion = false;
       cuadroCamaras[camaraActiva]->setAt({0, 0, 0});
@@ -407,26 +417,23 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
 void Escena::seleccionPixel()
 {
    GLint viewport[4];
-   GLubyte seleccionado[3];
+   GLfloat seleccionado[3];
 
    // Vuelca el entero del viewport
    glGetIntegerv(GL_VIEWPORT, viewport);
 
    // Lee los píxeles
-   glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_UNSIGNED_BYTE, (void *) seleccionado);
+   glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_FLOAT, (void *) seleccionado);
 
    // Seleccionamos ahora el objeto según el píxel seleccionado
-   if(seleccionado[0] == 0.0 && seleccionado[1] == 0.0 && seleccionado[2] == 0.0)
+   if(round(seleccionado[0]*10)/10 == 0.1)
       objetoSeleccionado(0, peon1);
 
-   else if(seleccionado[0] == 255.0 && seleccionado[1] == 0.0 && seleccionado[2] == 0.0)
+   else if(round(seleccionado[0]*10)/10 == 0.2)
       objetoSeleccionado(1, cilindro1);
-   
-   else if(seleccionado[0] == 255.0 && seleccionado[1] == 255.0 && seleccionado[2] == 0.0)
+
+   else if(round(seleccionado[0]*10)/10 == 0.3)
       objetoSeleccionado(2, esfera1);
-   
-   else if(seleccionado[0] == 255.0 && seleccionado[1] == 255.0 && seleccionado[2] == 255.0)
-      objetoSeleccionado(3, cubo);
 }
 
 /* Función para dibujar los objetos seleccionados en la escena */

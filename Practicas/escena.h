@@ -123,7 +123,7 @@ class Escena
     int selecComponente = -1;
 
     // Variables para la selección de la escena
-    int xleido = -1, yleido = -1, objetoActivo = 0;
+    int xleido = -1, yleido = -1, objetoActivo = -1;
     bool rotacionSeleccion = false;
 
    
