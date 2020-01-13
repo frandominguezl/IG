@@ -90,8 +90,10 @@ void special_keys( int tecla, int x, int y )
 // Función idle para las animaciones
 void funcion_idle()
 {
-   if (escena != 0)
+   if (escena != NULL){
       escena->animarModeloJerarquico();
+      escena->parpadeo();
+   }
    glutPostRedisplay();
 }
 

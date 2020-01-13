@@ -53,6 +53,7 @@ void Malla3D::cambiarColor(float R, float G, float B)
 
    // Color para el vector de colores
    Tupla3f color(R, G, B);
+   colorRGB = {R, G, B};
 
    // Colores adicionales para puntos y líneas
    Tupla3f colorPuntos(0, 0.5, 1.0);

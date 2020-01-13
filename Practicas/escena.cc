@@ -25,12 +25,12 @@ Escena::Escena()
    cilindro1->setEjeRevolucion('x');
    cono1 = new Cono(50, 30, 10);
    esfera1 = new Esfera(50, 50, 10);
-   esfera1->setEjeRevolucion('z');
 
    // Cargamos los objetos básicos
    cubo = new Cubo();
    tetraedro = new Tetraedro();
    cuadro = new Cuadro();
+   suelo = new Cuadro();
 
    // Modelo Jerárquico
    mol = new Molino();
@@ -62,18 +62,21 @@ Escena::Escena()
    cono1->setMaterial(mat1);
    mol->setMaterial(mat3);
    cuadro->setMaterial(mat1);
+   suelo->setMaterial(mat2);
 
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
    tex2 = Textura("img/maxresdefault.jpg", 2);
    tex3 = Textura("img/text-lata-1.jpg", 3);
    tex4 = Textura("img/mundo.jpg", 4);
+   tex5 = Textura("img/pacman.jpg", 5);
    cuadro->setTextura(tex2);
    cuadro->setCoordenadas();
    cubo->setTextura(tex1);
    cubo->setCoordenadas();
    cilindro1->setTextura(tex3);
-   esfera1->setTextura(tex4);
+   suelo->setTextura(tex5);
+   suelo->setCoordenadas();
 }
 
 /* Dibujando la escena */
@@ -83,11 +86,19 @@ void Escena::creacionEscena()
       glEnable(GL_TEXTURE_2D);
 
       glPushMatrix();
-         glTranslatef(-250, 500, -500);
-         cuadro->setPosicion({-250, 500, -500});
-         glScalef(5, 5, 5);
+         glTranslatef(-350, 650, -500);
+         cuadro->setPosicion({-350, 650, -500});
+         glScalef(8, 8, 8);
          glRotatef(-90, 0, 0, 1);
          cuadro->draw(modoDibujado, puntos, lineas, solido);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(-350, -100, -375);
+         glRotatef(-90, 1, 0, 0);
+         glRotatef(-90, 0, 0, 1);
+         glScalef(8, 8, 8);
+         suelo->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
 
       glPushMatrix();
@@ -95,14 +106,6 @@ void Escena::creacionEscena()
          cubo->setPosicion({65, 100, 0});
          glScalef(0.5, 0.5, 0.5);
          cubo->draw(modoDibujado, puntos, lineas, solido);
-      glPopMatrix();
-
-      glPushMatrix();
-         glTranslatef(100, 0, 100);
-         esfera1->setPosicion({100, 0, 100});
-         glScalef(5,5,5);
-         glRotatef(180, 1, 0, 0);
-         esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
 
       glPushMatrix();
@@ -115,12 +118,22 @@ void Escena::creacionEscena()
       glDisable(GL_TEXTURE_2D);
 
       glPushMatrix();
+         glTranslatef(100, 0, 100);
+         esfera1->setPosicion({100, 0, 100});
+         glScalef(5,5,5);
+         glRotatef(180, 1, 0, 0);
+         esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(145, -90, 250);
          mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(0, 0, -100);
-         tetraedro->setPosicion({0, 0, -100});
+         glTranslatef(-175, -60, -100);
+         glScalef(0.65, 0.65, 0.65);
+         tetraedro->setPosicion({-175, -60, -100});
          tetraedro->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
       
@@ -132,8 +145,9 @@ void Escena::creacionEscena()
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(-200, 0, 0);
-         ply1->setPosicion({-200, 0, 0});
+         glRotatef(-20, 0, 1, 0);
+         glTranslatef(-50, -70, 250);
+         ply1->setPosicion({-50, -70, 250});
          glScalef(3,3,3);
          ply1->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
@@ -147,15 +161,40 @@ void Escena::creacionEscena()
    glPopMatrix();
 }
 
+/* Parpadeo de los objetos seleccionables */
+void Escena::parpadeo()
+{
+   Tupla3f actual = esfera1->getColor();
+
+   if(step1){
+      esfera1->cambiarColor(0, 0, 0);
+      step1 = false;
+   }
+
+   else{
+      esfera1->cambiarColor(1, 0.9, 1);
+      step1 = true;
+   }
+   
+
+   /*if(step2){
+      esfera1->cambiarColor(actual[0], actual[1], actual[2]);
+   }
+
+   step1 = !step1;
+   step2 = !step2;*/
+}
+
 /* Los colores originales de los objetos */
 void Escena::coloresOriginales()
 {
    cuadro->cambiarColor(1.0, 1.0, 1.0);
+   suelo->cambiarColor(1.0, 1.0, 1.0);
    cubo->cambiarColor(1.0, 1.0, 1.0);
-   esfera1->cambiarColor(1.0, 1.0, 1.0);
+   esfera1->cambiarColor(1.0, 0.9, 0.1);
    cilindro1->cambiarColor(1.0, 1.0, 1.0);
    mol->cambiarColor(1.0, 0, 0);
-   tetraedro->cambiarColor(1.0, 0, 0);
+   tetraedro->cambiarColor(0.8, 0.8, 0.8);
    peon1->cambiarColor(1.0, 0, 0);
    ply1->cambiarColor(1.0, 0, 0);
    peon2->cambiarColor(1.0, 0, 0);
@@ -358,13 +397,13 @@ void Escena::dibujar()
       dibujaSeleccion();
 
 	glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT ); // Limpiamos de nuevo
-   
-   coloresOriginales();
 
    change_projection();
 	change_observer();
    glDisable(GL_LIGHTING);
    ejes.draw();
+
+   coloresOriginales();
 
    // Luces, cámaras...
    activacionLuces();
@@ -372,14 +411,14 @@ void Escena::dibujar()
    // Acción
    creacionEscena();
 
+
 }
 
 // Asignamos los colores a los objetos seleccionables
 void Escena::coloresSeleccionables()
 {
-   peon1->cambiarColor(0.1, 0.0, 0.0);
-   cilindro1->cambiarColor(0.2, 0.0, 0.0);
-   esfera1->cambiarColor(0.3, 0.0, 0.0);
+   esfera1->cambiarColor(0.9, 0.0, 0.0);
+   tetraedro->cambiarColor(0.2, 0.0, 0.0);
 }
 
 // Mueve la cámara según el objeto seleccionado. Si vuelve a ser pulsado, volvemos al eje de coordenadas
@@ -389,9 +428,8 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
    {
       switch(objSelec)
       {
-         case 0: std::cout << "Peón seleccionado" << std::endl; break;
-         case 1: std::cout << "Cilindro seleccionado" << std::endl; break;
-         case 2: std::cout << "Esfera seleccionada" << std::endl; break;
+         case 0: std::cout << "Esfera seleccionada" << std::endl; break;
+         case 1: std::cout << "Tetraedro seleccionado" << std::endl; break;
       }
 
       objetoActivo = objSelec;
@@ -403,10 +441,10 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
    {
       switch(objSelec)
       {
-         case 0: std::cout << "Peón deseleccionado" << std::endl; break;
-         case 1: std::cout << "Cilindro deseleccionado" << std::endl; break;
-         case 2: std::cout << "Esfera deseleccionada" << std::endl; break;
+         case 0: std::cout << "Esfera deseleccionada" << std::endl; break;
+         case 1: std::cout << "Tetraedro deseleccionado" << std::endl; break;
       }
+
       objetoActivo = -1;
       rotacionSeleccion = false;
       cuadroCamaras[camaraActiva]->setAt({0, 0, 0});
@@ -426,14 +464,11 @@ void Escena::seleccionPixel()
    glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_FLOAT, (void *) seleccionado);
 
    // Seleccionamos ahora el objeto según el píxel seleccionado
-   if(round(seleccionado[0]*10)/10 == 0.1)
-      objetoSeleccionado(0, peon1);
+   if(round(seleccionado[0]*10)/10 == 0.9)
+      objetoSeleccionado(0, esfera1);
 
    else if(round(seleccionado[0]*10)/10 == 0.2)
-      objetoSeleccionado(1, cilindro1);
-
-   else if(round(seleccionado[0]*10)/10 == 0.3)
-      objetoSeleccionado(2, esfera1);
+      objetoSeleccionado(1, tetraedro);
 }
 
 /* Función para dibujar los objetos seleccionados en la escena */

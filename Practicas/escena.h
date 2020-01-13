@@ -53,8 +53,9 @@ class Escena
     Cubo * cubo = nullptr ; // es importante inicializarlo a 'nullptr'
     Tetraedro * tetraedro = nullptr ; // es importante inicializarlo a 'nullptr'
 
-    // Cuadro
+    // Cuadro y suelo
     Cuadro* cuadro = nullptr;
+    Cuadro* suelo = nullptr;
 
     // Luces
     LuzPosicional * luzP = nullptr;
@@ -67,6 +68,7 @@ class Escena
     Textura tex2;
     Textura tex3;
     Textura tex4;
+    Textura tex5;
 
     // Modelo Jerárquico
     Molino * mol = nullptr;
@@ -126,6 +128,8 @@ class Escena
     int xleido = -1, yleido = -1, objetoActivo = -1;
     bool rotacionSeleccion = false;
 
+    bool step1 = true;
+
    
    public:
 
@@ -139,11 +143,12 @@ class Escena
     void clickRaton(int boton, int estado, int x, int y);
     void ratonMovido(int x, int y);
 
-    // INteracción con la escena
+    // Interacción con la escena
     void dibujaSeleccion();
     void coloresSeleccionables();
     void objetoSeleccionado(int objSelec, Malla3D* obj);
     void seleccionPixel();
+    void parpadeo();
 
 	// Dibujar
 	void dibujar() ;
