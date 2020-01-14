@@ -165,24 +165,67 @@ void Escena::creacionEscena()
 void Escena::parpadeo()
 {
    Tupla3f actual = esfera1->getColor();
+   Tupla3f actualT = tetraedro->getColor();
 
-   if(step1){
-      esfera1->cambiarColor(0, 0, 0);
-      step1 = false;
-   }
+   /* Variamos los colores si no están las luces activadas */
+   if(!modoIluminacion){
+      if(actual[0] <= 1.0 && step1)
+      {
+         actual[0] += 0.01;
 
-   else{
-      esfera1->cambiarColor(1, 0.9, 1);
-      step1 = true;
-   }
-   
+         if(actual[2] < 0.9)
+            actual[1] += 0.01;
+         
+         if(actual[2] < 0.1)
+            actual[2] += 0.01;
 
-   /*if(step2){
+         if(actual[0] >= 1.0 && actual[1] >= 0.9 && actual[2] >= 0.1)
+         {
+            step1 = false;
+         }
+      }
+      
+      if(!step1){
+         actual[0] -= 0.005;
+         actual[1] -= 0.005;
+         actual[2] -= 0.005;
+
+         if(actual[0] <= 0.0 && actual[1] <= 0.0 && actual[2] <= 0.0)
+         {
+            step1 = true;
+         }        
+      }
+
+   if(actualT[0] <= 0.8 && step2)
+      {
+         actualT[0] += 0.01;
+
+         if(actualT[2] < 0.8)
+            actualT[1] += 0.01;
+         
+         if(actualT[2] < 0.8)
+            actualT[2] += 0.01;
+
+         if(actualT[0] >= 0.8 && actualT[1] >= 0.8 && actualT[2] >= 0.8)
+         {
+            step2 = false;
+         }
+      }
+      
+      if(!step2){
+         actualT[0] -= 0.005;
+         actualT[1] -= 0.005;
+         actualT[2] -= 0.005;
+
+         if(actualT[0] <= 0.0 && actualT[1] <= 0.0 && actualT[2] <= 0.0)
+         {
+            step2 = true;
+         }        
+      }
+
       esfera1->cambiarColor(actual[0], actual[1], actual[2]);
+      tetraedro->cambiarColor(actualT[0], actualT[1], actualT[2]);
    }
-
-   step1 = !step1;
-   step2 = !step2;*/
 }
 
 /* Los colores originales de los objetos */
@@ -191,10 +234,8 @@ void Escena::coloresOriginales()
    cuadro->cambiarColor(1.0, 1.0, 1.0);
    suelo->cambiarColor(1.0, 1.0, 1.0);
    cubo->cambiarColor(1.0, 1.0, 1.0);
-   esfera1->cambiarColor(1.0, 0.9, 0.1);
    cilindro1->cambiarColor(1.0, 1.0, 1.0);
    mol->cambiarColor(1.0, 0, 0);
-   tetraedro->cambiarColor(0.8, 0.8, 0.8);
    peon1->cambiarColor(1.0, 0, 0);
    ply1->cambiarColor(1.0, 0, 0);
    peon2->cambiarColor(1.0, 0, 0);
@@ -417,8 +458,8 @@ void Escena::dibujar()
 // Asignamos los colores a los objetos seleccionables
 void Escena::coloresSeleccionables()
 {
-   esfera1->cambiarColor(0.9, 0.0, 0.0);
-   tetraedro->cambiarColor(0.2, 0.0, 0.0);
+   esfera1->cambiarColor(1.0, 0.9, 0.1);
+   tetraedro->cambiarColor(0.8, 0.8, 0.8);
 }
 
 // Mueve la cámara según el objeto seleccionado. Si vuelve a ser pulsado, volvemos al eje de coordenadas
@@ -464,10 +505,10 @@ void Escena::seleccionPixel()
    glReadPixels(xleido, viewport[3]-yleido, 1, 1, GL_RGB, GL_FLOAT, (void *) seleccionado);
 
    // Seleccionamos ahora el objeto según el píxel seleccionado
-   if(round(seleccionado[0]*10)/10 == 0.9)
+   if(round(seleccionado[0]*10)/10 == 1.0)
       objetoSeleccionado(0, esfera1);
 
-   else if(round(seleccionado[0]*10)/10 == 0.2)
+   else if(round(seleccionado[0]*10)/10 == 0.8)
       objetoSeleccionado(1, tetraedro);
 }
 

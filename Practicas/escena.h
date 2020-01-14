@@ -128,7 +128,8 @@ class Escena
     int xleido = -1, yleido = -1, objetoActivo = -1;
     bool rotacionSeleccion = false;
 
-    bool step1 = true;
+    // Variables para controlar el parpadeo
+    bool step1 = true, step2 = true;
 
    
    public:
