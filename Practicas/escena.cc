@@ -290,7 +290,7 @@ void Escena::parpadeo()
             step4 = false;
       }
 
-      if(!step3)
+      if(!step4)
       {
          if(tetra_dif[0] > 0.0)
             tetra_dif[0] -= 0.01;
@@ -388,7 +388,30 @@ void Escena::animarModeloJerarquico()
          break;
 
          case 3:
+            altura -= 0.5*fVGrado3*factorVelocidad;
             anguloEje += 1.2;
+
+            if(altura <= 0.0)
+               pausa = 4;
+         break;
+
+         case 4:
+            anguloEje += 1.2;
+            anguloCabezalZ += 0.5*fVGrado2*factorVelocidad;
+
+            if(anguloCabezalZ >= 0.0){
+               pausa = 5;
+            }
+         break;
+
+         case 5:
+            anguloEje += 1.2;
+         
+            anguloCabezalY -= 0.5*fVGrado1*factorVelocidad;
+
+            if(anguloCabezalY <= 0.0){
+               pausa = 0;
+            }
          break;
       }
    }
