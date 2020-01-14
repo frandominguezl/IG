@@ -20,7 +20,7 @@
 #include "camara.h"
 
 
-typedef enum {NADA, SELOBJETO,SELVISUALIZACION,SELDIBUJADO} menu;
+typedef enum {NADA, SELVISUALIZACION, SELDIBUJADO, MODOCAMARA, MOVMANUAL} menu;
 class Escena
 {
 
@@ -112,6 +112,9 @@ class Escena
     bool animate = false;
     bool animatePuntual = false;
 
+    // Cambiar manualmente el grado de libertad del objeto jerárquico
+    bool movManual = false;
+
     // Factores de velocidad
     float factorVelocidad = 1.0;
     float fVGrado0 = 1.0;
@@ -143,6 +146,7 @@ class Escena
     void animarModeloJerarquico();
     void clickRaton(int boton, int estado, int x, int y);
     void ratonMovido(int x, int y);
+    void interaccionTerminal();
 
     // Interacción con la escena
     void dibujaSeleccion();

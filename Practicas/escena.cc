@@ -196,7 +196,7 @@ void Escena::parpadeo()
          }        
       }
 
-   if(actualT[0] <= 0.8 && step2)
+   if(step2)
       {
          actualT[0] += 0.01;
 
@@ -660,6 +660,68 @@ void Escena::dibujaSeleccion()
    yleido = -1;
 }
 
+/* Función para mostrar por terminal las diferentes opciones de los diferentes modos */
+void Escena::interaccionTerminal()
+{
+   if(modoMenu == NADA)
+   {
+      std::cout << "Opciones disponibles:\n";
+      std::cout << "\tV: Modo de Visualización\n";
+      std::cout << "\tD: Selección de Modo de Dibujo\n";
+      std::cout << "\tA: Activar/Desactivar Animación automática de los objetos\n";
+      std::cout << "\tM: Mover manualmente el grado de libertad (se desactiva la animación automática)\n";
+      std::cout << "\tC: Modo Selección de Cámara\n";
+      std::cout << "\tQ: Salir del programa\n";
+   }
+
+   if(modoMenu == SELDIBUJADO)
+   {
+      std::cout << "Modo selección de Modo de Dibujado - Opciones Disponibles\n";
+      std::cout << "\t1: Activar el Modo Inmediato\n";
+      std::cout << "\t2: Activar el Modo Diferido\n";
+      std::cout << "\tQ: Salir del Modo de selección\n";
+   }
+
+   if(modoMenu == SELVISUALIZACION && !modoIluminacion)
+   {
+      std::cout << "Modo de Visualización - Opciones Disponibles\n";
+      std::cout << "\tP: Activar/Desactivar el Modo Puntos\n";
+      std::cout << "\tL: Activar/Desactivar el Modo Líneas\n";
+      std::cout << "\tS: Activar/Desactivar el Modo Sólido\n";
+      std::cout << "\tA: Activar/Desactivar el Modo Ajedrez (desactivando iluminación)\n";
+      std::cout << "\tI: Activar/Desactivar el Modo Iluminación\n";
+      std::cout << "\tQ: Salir del Modo Visualización\n";
+   }
+
+   if(modoMenu == SELVISUALIZACION && modoIluminacion)
+   {
+      std::cout << "Modo Iluminación - Opciones Disponibles\n";
+      std::cout << "\t0-7: Activar/Desactivar las luces\n";
+      std::cout << "\tA: Activar variación del ángulo alfa\n";
+      std::cout << "\tB: Activar variación del ángulo beta\n";
+      std::cout << "\t>: Incrementa el ángulo (según lo último pulsado)\n";
+      std::cout << "\t<: Decrementa el ángulo (según lo último pulsado)\n";
+      std::cout << "\tP: Animación automática de la luz puntual\n";
+      std::cout << "\tQ: Salir del Modo Visualización\n";
+   }
+
+   if(modoMenu == MOVMANUAL)
+   {
+      std::cout << "Movimiento Manual de los Grados de Libertad - Opciones Disponibles\n";
+      std::cout << "\t0-3: Seleccionar grado de libertad\n";
+      std::cout << "\t+: Aumenta el valor del grado de libertad seleccionado\n";
+      std::cout << "\t-: Decrementa el valor del grado de libertad seleccionado\n";
+      std::cout << "\tQ: Salir del Modo\n";
+   }
+
+   if(modoMenu == MODOCAMARA)
+   {
+      std::cout << "Modo Cámara - Opciones Disponibles\n";
+      std::cout << "\t0-7: Seleccionar cámara\n";
+      std::cout << "\tQ: Salir del Modo Cámara\n";
+   }
+}
+
 //**************************************************************************
 //
 // función que se invoca cuando se pulsa una tecla
@@ -671,7 +733,6 @@ void Escena::dibujaSeleccion()
 bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
 {
    using namespace std ;
-   cout << "Tecla pulsada: '" << tecla << "'" << endl;
    bool salir = false;
    bool modoLibertad = false;
    static int gradoLibertad = -1;
@@ -679,16 +740,178 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
    switch( toupper(tecla) )
    {
       case 'Q' :
-         if (modoMenu!=NADA){
+         if (modoMenu!=NADA)
+         {
          	modoMenu=NADA;
          }          
-         else {
+         else 
+         {
             salir=true ;
          }
       break;
 
       case 'T' :
          tapas = !tapas;
+      break;
+
+      case 'D' :
+         if(modoMenu == NADA)
+         {
+            modoMenu = SELDIBUJADO;
+            std::cout << "\nEntrando en Modo Dibujado\n";
+         }
+      break;
+
+      case 'V' :
+         if(modoMenu == NADA)
+         {
+         	modoMenu = SELVISUALIZACION;
+            std::cout << "\nEntrando en Modo Visualización\n";
+         }
+      break;
+
+      case 'P' :
+         if (modoMenu == SELVISUALIZACION && !modoIluminacion)
+         {
+            modoIluminacion = false;
+            puntos = !puntos;
+
+            if(puntos)
+            {
+               std::cout << "\nModo puntos activado\n";
+            }
+
+            else
+            {
+               std::cout << "\nModo puntos desactivado\n";
+            }
+         }
+
+         if(modoMenu == SELVISUALIZACION && modoIluminacion && luces[0])
+         {
+            animatePuntual = !animatePuntual;
+
+            if(animatePuntual)
+            {
+               std::cout << "\nLuz puntual animada\n";
+            }
+
+            else
+            {
+               std::cout << "\nLuz puntual parada\n";
+            }
+         }
+      break;
+
+      case 'L' :
+         if (modoMenu == SELVISUALIZACION)
+         {
+            modoIluminacion = false;
+            lineas = !lineas;
+
+            if(lineas)
+            {
+               std::cout << "\nModo lineas activado\n";
+            }
+
+            else
+            {
+               std::cout << "\nModo lineas desactivado\n";
+            }
+         }
+      break;
+
+      case 'S' :
+         if (modoMenu == SELVISUALIZACION)
+         {
+            modoIluminacion = false;
+            solido = !solido;
+
+            if(solido)
+            {
+               std::cout << "\nModo solido activado\n";
+            }
+
+            else
+            {
+               std::cout << "\nModo solido desactivado\n";
+            }
+         }
+      break;
+
+      case 'A' :
+         if (modoMenu == SELVISUALIZACION && !modoIluminacion)
+         {
+            modoIluminacion = false;
+            chess = !chess;
+
+            if(chess){
+               modoDibujado = 3;
+               std::cout << "\nModo ajedrez activado\n";
+            }
+
+            else{
+               modoDibujado = 1;
+               std::cout << "\nModo lineas desactivado\n";
+            }
+         }
+
+         else if (modoMenu == SELVISUALIZACION && modoIluminacion)
+         {
+            selecComponente = 0;
+            std::cout << "\nSeleccionado 'Alfa'\n";
+         }
+
+         else if (modoMenu == NADA)
+         {
+            std::cout << "\nAnimación automática activada\n";
+            animate = !animate;
+         }
+      break;
+
+      case 'I' :
+         if (modoMenu == SELVISUALIZACION)
+         {
+            modoIluminacion = !modoIluminacion;
+
+            if(modoIluminacion)
+            {
+               std::cout << "\nIluminación activada\n";
+            }
+
+            else
+            {
+               std::cout << "\nIluminación desactivada\n";
+            }
+         }
+      break;
+
+      case 'B' :
+         if (modoIluminacion)
+         {
+            selecComponente = 1;
+            std::cout << "\nSeleccionado 'Beta'\n";
+         }
+      break;
+
+      case '<' :
+         if (modoIluminacion){
+            if(selecComponente == 0)
+               cuadroLuces[1]->variarAnguloAlpha(-1.0);
+
+            else if(selecComponente == 1)
+               cuadroLuces[1]->variarAnguloBeta(-1.0);
+         }
+      break;
+
+      case '>' :
+         if (modoIluminacion){
+            if(selecComponente == 0)
+               cuadroLuces[1]->variarAnguloAlpha(1.0);
+
+            else if(selecComponente == 1)
+               cuadroLuces[1]->variarAnguloBeta(1.0);
+         }
       break;
 
       case '+' :
@@ -723,202 +946,114 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break;
 
-      case 'V' :
-         if(modoMenu != SELOBJETO || modoMenu != SELDIBUJADO){
-         	modoMenu=SELVISUALIZACION;
-            std::cout<<"Entrando en Modo Visualización\n";
-         }
-         break;
-      case 'D' :
-         if(modoMenu != SELOBJETO || modoMenu != SELVISUALIZACION){
-         	modoMenu=SELDIBUJADO;
-            std::cout<<"Entrando en Modo Dibujado\n";
-         }
-      break;
-
-      case 'P' :
-        if (modoMenu == SELVISUALIZACION && !modoIluminacion){
-            modoIluminacion = false;
-            puntos = !puntos;
-        }
-
-         if(modoIluminacion && luces[0])
-            animatePuntual = !animatePuntual;
-      break;
-
-      case 'L' :
-        if (modoMenu == SELVISUALIZACION){
-            modoIluminacion = false;
-            lineas = !lineas;
-        }
-      break;
-
-      case 'S' :
-        if (modoMenu == SELVISUALIZACION){
-            modoIluminacion = false;
-            solido = !solido;
-        }
-      break;
-
-      case 'A' :
-         if (modoMenu == SELVISUALIZACION && !modoIluminacion){
-            modoIluminacion = false;
-            chess = !chess;
-
-            if(chess){
-               modoDibujado = 3;
-            }
-
-            else{
-               modoDibujado = 1;
-            }
-         }
-
-         else if (modoIluminacion){
-            selecComponente = 0;
-            animate = !animate;
-            animatePuntual = !animatePuntual;
-         }
-
-         else{
-            animate = !animate;
-         }
-      break;
-
-      case 'B' :
-         if (modoIluminacion){
-            selecComponente = 1;
-         }
-      break;
-
       case 'M':
-         animate = false;
+         if(modoMenu == NADA)
+         {
+            animate = false;
+            movManual = !movManual;
+            modoMenu = MOVMANUAL;
+            std::cout << "\nMovimiento manual de los grados de libertad activado\n";
+         }
       break;
 
       case 'C':
-         modoCamara = !modoCamara;
-         std::cout<<"Modo Cámara activado. Presione una tecla de 0 al 7 para activar una cámara.\n";
-      break;
-
-      case '<' :
-         if (modoIluminacion){
-            if(selecComponente == 0){
-               cuadroLuces[1]->variarAnguloAlpha(-1.0);
-            }
-
-            else if(selecComponente == 1){
-               cuadroLuces[1]->variarAnguloBeta(-1.0);
-            }
-         }
-      break;
-
-      case '>' :
-         if (modoIluminacion){
-            if(selecComponente == 0){
-               cuadroLuces[1]->variarAnguloAlpha(1.0);
-            }
-
-            else if(selecComponente == 1){
-               cuadroLuces[1]->variarAnguloBeta(1.0);
-            }
-         }
-      break;      
-
-      case 'I' :
-         if (modoMenu == SELVISUALIZACION){
-            modoIluminacion = !modoIluminacion;
+         if(modoMenu == NADA)
+         {
+            modoCamara = !modoCamara;
+            modoMenu = MODOCAMARA;
+            std::cout << "\nModo Cámara activado\n";
          }
       break;
 
       case '0' :
-         if (modoIluminacion){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[0] = !luces[0];
-            std::cout<<"\tLuz 0 activada\n";
+            std::cout<<"\n\tLuz 0 activada\n";
          }
 
-         else if (!modoIluminacion && !animate && !modoCamara){
+         else if (modoMenu == MOVMANUAL && movManual){
             gradoLibertad = 0;
-            std::cout<<"\tSeleccionado grado de libertad 0\n";
+            std::cout << "\n\tSeleccionado grado de libertad 0\n";
          }
 
-         else if (modoCamara){
+         else if (modoMenu == MODOCAMARA && modoCamara){
             camaras[0] = !camaras[0];
             camaraActiva = 0;
-            std::cout<<"\tCámara 0 activada\n";
+            std::cout << "\n\tCámara 0 activada\n";
          }
       break;
 
       case '1' :
-        if (modoMenu == SELDIBUJADO){
-          modoDibujado = 1;
-          std::cout<<"\tModo de dibujado: Inmediato\n";
-        }
+         if (modoMenu == SELDIBUJADO){
+            modoDibujado = 1;
+            std::cout << "\n\tModo de dibujado: Inmediato\n";
+         }
 
-        else if (modoIluminacion){
-           luces[1] = !luces[1];
-           std::cout<<"\tLuz 1 activada\n";
-        }
+         else if (modoMenu == SELVISUALIZACION && modoIluminacion){
+            luces[1] = !luces[1];
+            std::cout << "\n\tLuz 1 activada\n";
+         }
 
-        else if (!modoIluminacion && !animate && !modoCamara){
-           gradoLibertad = 1;
-           std::cout<<"\tSeleccionado grado de libertad 1\n";
-        }
+         else if (modoMenu == MOVMANUAL && movManual){
+            gradoLibertad = 1;
+            std::cout << "\n\tSeleccionado grado de libertad 1\n";
+         }
 
-        else if (modoCamara){
-           camaras[1] = !camaras[1];
-           camaraActiva = 1;
-           std::cout<<"\tCámara 1 activada\n";
-        }
+         else if (modoMenu == MODOCAMARA && modoCamara){
+            camaras[1] = !camaras[1];
+            camaraActiva = 1;
+            std::cout << "\n\tCámara 1 activada\n";
+         }
       break;
 
       case '2' :
-        if (modoMenu == SELDIBUJADO){
-          modoDibujado = 2;
-          std::cout<<"\tModo de dibujado: Diferido\n";
-        }
+         if (modoMenu == SELDIBUJADO){
+            modoDibujado = 2;
+            std::cout << "\n\tModo de dibujado: Diferido\n";
+         }
 
-        else if (modoIluminacion){
-           luces[2] = !luces[2];
-           std::cout<<"\tLuz 2 activada\n";
-        }
+         else if (modoMenu == SELVISUALIZACION && modoIluminacion){
+            luces[2] = !luces[2];
+            std::cout << "\n\tLuz 2 activada\n";
+         }
 
-        else if (!modoIluminacion && !animate && !modoCamara){
-           gradoLibertad = 2;
-           std::cout<<"\tSeleccionado grado de libertad 2\n";
-        }
+         else if (modoMenu == MOVMANUAL && movManual){
+            gradoLibertad = 2;
+            std::cout << "\n\tSeleccionado grado de libertad 2\n";
+         }
 
-        else if (modoCamara){
-           camaras[2] = !camaras[2];
-           camaraActiva = 2;
-           std::cout<<"\tCámara 2 activada\n";
-        }
+         else if (modoMenu == MODOCAMARA && modoCamara){
+            camaras[2] = !camaras[2];
+            camaraActiva = 2;
+            std::cout << "\n\tCámara 2 activada\n";
+         }
       break; 
 
       case '3' :
-         if (modoIluminacion){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[3] = !luces[3];
          }
 
-         else if (!modoIluminacion && !animate && !modoCamara){
-           gradoLibertad = 3;
-           std::cout<<"\tSeleccionado grado de libertad 3\n";
-        }
+         else if (modoMenu == MOVMANUAL && movManual){
+            gradoLibertad = 3;
+            std::cout << "\n\tSeleccionado grado de libertad 3\n";
+         }
 
-        else if (modoCamara){
-           camaras[3] = !camaras[3];
+         else if (modoMenu == MODOCAMARA && modoCamara){
+            camaras[3] = !camaras[3];
 
-           if(cuadroCamaras[3] != nullptr)
+            if(cuadroCamaras[3] != nullptr)
                camaraActiva = 3;
-               std::cout<<"\tCámara 3 activada\n";
-        }
+               std::cout << "\n\tCámara 3 activada\n";
+         }
       break;  
 
       case '4' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[4] = !luces[4];
          }
 
-         else if (modoCamara){
+         else if (modoMenu == MODOCAMARA && modoCamara){
             camaras[4] = !camaras[4];
 
             if(cuadroCamaras[4] != nullptr)  
@@ -927,11 +1062,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case '5' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[5] = !luces[5];
          }
 
-         else if (modoCamara){
+         else if (modoMenu == MODOCAMARA && modoCamara){
             camaras[5] = !camaras[5];
 
             if(cuadroCamaras[5] != nullptr)  
@@ -940,11 +1075,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case '6' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[6] = !luces[6];
          }
 
-         else if (modoCamara){
+         else if (modoMenu == MODOCAMARA && modoCamara){
             camaras[6] = !camaras[6];
 
             if(cuadroCamaras[6] != nullptr)  
@@ -953,11 +1088,11 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
       break;
 
       case '7' :
-         if (modoMenu == SELVISUALIZACION){
+         if (modoMenu == SELVISUALIZACION && modoIluminacion){
             luces[7] = !luces[7];
          }
 
-         else if (modoCamara){
+         else if (modoMenu == MODOCAMARA && modoCamara){
             camaras[7] = !camaras[7];
 
             if(cuadroCamaras[7] != nullptr)  
@@ -965,6 +1100,8 @@ bool Escena::teclaPulsada( unsigned char tecla, int x, int y )
          }
       break;  
    }
+
+   interaccionTerminal();
 
    return salir;
 }
