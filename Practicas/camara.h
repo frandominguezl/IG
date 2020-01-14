@@ -12,6 +12,8 @@ class Camara
         Tupla3f at;
         Tupla3f up;
 
+        bool rotando = false;
+
         // 0 = ortogonal, 1 = perspectiva
         int tipo; 
         float fovY, aspect, near, far, top, left;
@@ -43,6 +45,8 @@ class Camara
         void setProyeccion();
 
         inline void setAt(Tupla3f punto){this->at = punto;};
+        inline void setRotando(bool rot){this->rotando = rot;};
+        inline bool getRotando(){return this->rotando;};
 };
 
 #endif

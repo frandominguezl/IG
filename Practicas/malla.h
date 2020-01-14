@@ -60,6 +60,9 @@ class Malla3D
    // Obtener el color actual
    inline Tupla3f getColor(){return colorRGB;};
 
+   // Obtener el material actual
+   inline Material* getMaterial(){return mat;};
+
    protected:
 
    // Visualización en Modo Diferido (VBO)
@@ -70,7 +73,7 @@ class Malla3D
    std::vector<Tupla3f> v ; // tabla de coordenadas de vértices (una tupla por vértice, con tres floats)
    std::vector<Tupla3i> f, fimpar, fpar ; // una terna de 3 enteros por cada cara o triángulo
    std::vector<Tupla3f> c, cimpar, cpar ;  // terna para los colores
-   std::vector<Tupla3f> cPuntos, cLineas; // Coloeres para diferentes modos de visualización
+   std::vector<Tupla3f> cPuntos, cLineas; // Colores para diferentes modos de visualización
    std::vector<Tupla3f> nv; // Vector de normales de los vértices
    std::vector<Tupla3f> nc; // Vector de normales de las caras
    std::vector<Tupla2f> ct; // Tabla de coordenadas de texturas
@@ -84,7 +87,7 @@ class Malla3D
    Textura* tex = nullptr;
 
    // Variables para visualización en Modo Diferido
-   GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0, vbo_cp = 0, vbo_cl = 0;
+   GLuint vbo_f = 0, vbo_v = 0, vbo_c = 0, vbo_n = 0, vbo_cp = 0, vbo_cl = 0, vbo_tex = 0;
 
    // completar: tabla de colores, tabla de normales de vértices
 } ;

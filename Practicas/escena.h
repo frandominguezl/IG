@@ -129,7 +129,7 @@ class Escena
     bool rotacionSeleccion = false;
 
     // Variables para controlar el parpadeo
-    bool step1 = true, step2 = true;
+    bool step1 = true, step2 = true, step3 = true, step4 = true;
 
    
    public:

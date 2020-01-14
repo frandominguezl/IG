@@ -62,7 +62,7 @@ Escena::Escena()
    cono1->setMaterial(mat1);
    mol->setMaterial(mat3);
    cuadro->setMaterial(mat1);
-   suelo->setMaterial(mat2);
+   suelo->setMaterial(mat1);
 
    // Texturas
    tex1 = Textura("img/text-madera.jpg", 1);
@@ -226,6 +226,93 @@ void Escena::parpadeo()
       esfera1->cambiarColor(actual[0], actual[1], actual[2]);
       tetraedro->cambiarColor(actualT[0], actualT[1], actualT[2]);
    }
+
+   /* Si las luces están activadas, es necesario cambiar los materiales */
+   else
+   {
+      Material* mat_esfera = esfera1->getMaterial();
+      Material* mat_tetra = tetraedro->getMaterial();
+
+      Tupla4f esfera_dif = mat_esfera->getAmbiente();
+      Tupla4f tetra_dif = mat_tetra->getAmbiente();
+
+      if(step3)
+      {
+         if(esfera_dif[0] < 0.4)
+            esfera_dif[0] += 0.01;
+         
+         if(esfera_dif[1] < 0.5)
+            esfera_dif[1] += 0.01;
+         
+         if(esfera_dif[2] < 0.4)
+            esfera_dif[2] += 0.01;
+         
+         if(esfera_dif[3] < 0.078)
+            esfera_dif[3] += 0.012;
+
+         if(esfera_dif[0] >= 0.4 && esfera_dif[1] >= 0.5 && esfera_dif[2] >= 0.4 && esfera_dif[3] >= 0.078)
+            step3 = false;
+      }
+
+      if(!step3)
+      {
+         if(esfera_dif[0] > 0.0)
+            esfera_dif[0] -= 0.01;
+         
+         if(esfera_dif[1] > 0.0)
+            esfera_dif[1] -= 0.01;
+         
+         if(esfera_dif[2] > 0.0)
+            esfera_dif[2] -= 0.01;
+         
+         if(esfera_dif[3] > 0.0)
+            esfera_dif[3] -= 0.012;
+
+         if(esfera_dif[0] <= 0.0 && esfera_dif[1] <= 0.0 && esfera_dif[2] <= 0.0 && esfera_dif[3] <= 0.0)
+            step3 = true;         
+      }
+
+      if(step4)
+      {
+         if(tetra_dif[0] < 0.135)
+            tetra_dif[0] += 0.01;
+         
+         if(tetra_dif[1] < 0.2225)
+            tetra_dif[1] += 0.01;
+         
+         if(tetra_dif[2] < 0.1575)
+            tetra_dif[2] += 0.01;
+         
+         if(tetra_dif[3] < 0.1)
+            tetra_dif[3] += 0.01;
+
+         if(tetra_dif[0] >= 0.135 && tetra_dif[1] >= 0.2225 && tetra_dif[2] >= 0.1575 && tetra_dif[3] >= 0.1)
+            step4 = false;
+      }
+
+      if(!step3)
+      {
+         if(tetra_dif[0] > 0.0)
+            tetra_dif[0] -= 0.01;
+         
+         if(tetra_dif[1] > 0.0)
+            tetra_dif[1] -= 0.01;
+         
+         if(tetra_dif[2] > 0.0)
+            tetra_dif[2] -= 0.01;
+         
+         if(tetra_dif[3] > 0.0)
+            tetra_dif[3] -= 0.012;
+
+         if(tetra_dif[0] <= 0.0 && tetra_dif[1] <= 0.0 && tetra_dif[2] <= 0.0 && tetra_dif[3] <= 0.0)
+            step4 = true;         
+      }
+
+      mat_esfera->setAmbiente(esfera_dif);
+      mat_tetra->setAmbiente(tetra_dif);
+      esfera1->setMaterial(*mat_esfera);
+      tetraedro->setMaterial(*mat_tetra);
+   }
 }
 
 /* Los colores originales de los objetos */
@@ -376,7 +463,7 @@ void Escena::ratonMovido(int x, int y)
 {
    if(moviendoCamaraFP)
    {
-      if(rotacionSeleccion)
+      if(cuadroCamaras[camaraActiva]->getRotando())
       {
          cuadroCamaras[camaraActiva]->rotarXExaminar((x-xant)*0.1);
          cuadroCamaras[camaraActiva]->rotarYExaminar((y-yant)*0.1);
@@ -451,8 +538,6 @@ void Escena::dibujar()
 
    // Acción
    creacionEscena();
-
-
 }
 
 // Asignamos los colores a los objetos seleccionables
@@ -476,6 +561,9 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
       objetoActivo = objSelec;
       rotacionSeleccion = true;
       cuadroCamaras[camaraActiva]->setAt(obj->getPosicion());
+
+      // ¿Estamos rotando en la cámara?
+      cuadroCamaras[camaraActiva]->setRotando(true);
    }
 
    else
@@ -489,6 +577,9 @@ void Escena::objetoSeleccionado(int objSelec, Malla3D* obj)
       objetoActivo = -1;
       rotacionSeleccion = false;
       cuadroCamaras[camaraActiva]->setAt({0, 0, 0});
+
+      // ¿Estamos rotando en la cámara?
+      cuadroCamaras[camaraActiva]->setRotando(false);
    }
 }
 

@@ -279,29 +279,29 @@ void ObjRevolucion::crearMalla(const std::vector<Tupla3f> & perfil_original, int
 
 void ObjRevolucion::draw_ModoInmediato(int modoDibujado, bool tapas)
 {
-    // Tabla de vértices
-    glEnableClientState(GL_VERTEX_ARRAY);
-    glVertexPointer(3, GL_FLOAT, 0, v.data());
+   // Tabla de vértices
+   glEnableClientState(GL_VERTEX_ARRAY);
+   glVertexPointer(3, GL_FLOAT, 0, v.data());
 
-    // Tabla de normales
-    glEnableClientState(GL_NORMAL_ARRAY);
-    glNormalPointer(GL_FLOAT, 0, nv.data());
+   // Tabla de normales
+   glEnableClientState(GL_NORMAL_ARRAY);
+   glNormalPointer(GL_FLOAT, 0, nv.data());
 
-    // Tabla de colores
-    glEnableClientState(GL_COLOR_ARRAY);
+   // Tabla de colores
+   glEnableClientState(GL_COLOR_ARRAY);
+   
+   switch(modoDibujado)
+   {
+      case 1: glColorPointer(3, GL_FLOAT, 0, cPuntos.data()); break;
+      case 2: glColorPointer(3, GL_FLOAT, 0, cLineas.data()); break;
+      case 3: glColorPointer(3, GL_FLOAT, 0, c.data()); break;
+   }
 
-    switch(modoDibujado)
-    {
-        case 1: glColorPointer(3, GL_FLOAT, 0, cPuntos.data()); break;
-        case 2: glColorPointer(3, GL_FLOAT, 0, cLineas.data()); break;
-        case 3: glColorPointer(3, GL_FLOAT, 0, c.data()); break;
-    }
-
-    // Tabla de texturas
-    if(!ct.empty() && tex != nullptr){
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-        glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
-    }
+   // Tabla de texturas
+   if(!ct.empty() && tex != nullptr){
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, ct.data());
+   }
 
     // Tabla de triángulos
     if(tapas){
@@ -312,9 +312,10 @@ void ObjRevolucion::draw_ModoInmediato(int modoDibujado, bool tapas)
         glDrawElements(GL_TRIANGLES, f.size()*3-instancias_triangulos*3, GL_UNSIGNED_INT, f.data());
     }
 
-    glDisableClientState(GL_COLOR_ARRAY);
-    glDisableClientState(GL_NORMAL_ARRAY);
-    glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_COLOR_ARRAY);
+   glDisableClientState(GL_NORMAL_ARRAY);
+   glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void ObjRevolucion::draw_ModoDiferido(int modoDibujado, bool tapas)
@@ -342,6 +343,7 @@ void ObjRevolucion::draw_ModoDiferido(int modoDibujado, bool tapas)
    glEnableClientState(GL_NORMAL_ARRAY);
 
    // Array de colores
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
    glEnableClientState(GL_COLOR_ARRAY);
 
    switch(modoDibujado)
@@ -350,40 +352,53 @@ void ObjRevolucion::draw_ModoDiferido(int modoDibujado, bool tapas)
          if(vbo_cp == 0)
             vbo_cp = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*cPuntos.size(), cPuntos.data());
          
-         glBindBuffer(GL_ARRAY_BUFFER, vbo_cp);
+         glColorPointer(3, GL_FLOAT, 0, cPuntos.data());
       break;
 
       case 2:
          if(vbo_cl == 0)
             vbo_cl = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*cLineas.size(), cLineas.data());
          
-         glBindBuffer(GL_ARRAY_BUFFER, vbo_cl);
+         glColorPointer(3, GL_FLOAT, 0, cLineas.data());
       break;
       
       case 3:
          if(vbo_c == 0)
             vbo_c = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(int)*c.size(), c.data());
          
-         glBindBuffer(GL_ARRAY_BUFFER, vbo_c);
+         glColorPointer(3, GL_FLOAT, 0, c.data());
       break;
    }
 
-   glColorPointer(3, GL_FLOAT, 0, 0);
-   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   // Tabla de texturas
+   if(vbo_tex == 0){
+      vbo_tex = CrearVBO(GL_ARRAY_BUFFER, 3*sizeof(float)*ct.size(), ct.data());
+   }
 
-   if(tapas){
-        glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, f.data());
+   if(!ct.empty() && tex != nullptr){
+      glBindBuffer(GL_ARRAY_BUFFER, vbo_tex);
+      glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+      glTexCoordPointer(2, GL_FLOAT, 0, 0);
+   }
+
+  if(tapas){
+        glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, 0);
    }
 
    else{
-        glDrawElements(GL_TRIANGLES, f.size()*3-instancias_triangulos*3, GL_UNSIGNED_INT, f.data());
+        glDrawElements(GL_TRIANGLES, f.size()*3-instancias_triangulos*3, GL_UNSIGNED_INT, 0);
    }
-   
+
+    glBindBuffer(GL_COLOR_ARRAY, 0);
+   glColorPointer(3, GL_FLOAT, 0, 0);
+   glBindBuffer(GL_ARRAY_BUFFER, 0);
+   glDrawElements(GL_TRIANGLES, f.size()*3, GL_UNSIGNED_INT, 0);
    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 
    glDisableClientState(GL_NORMAL_ARRAY);
    glDisableClientState(GL_COLOR_ARRAY);
    glDisableClientState(GL_VERTEX_ARRAY);
+   glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void ObjRevolucion::draw_Chess(bool tapas)
