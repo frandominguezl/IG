@@ -19,10 +19,11 @@ Escena::Escena()
    ply1 = new ObjPLY("plys/ant.ply");
 
    // Cargamos objetos de revolución
-   peon1 = new ObjRevolucion("plys/peon.ply", 50, 3);
-   peon2 = new ObjRevolucion("plys/peon.ply", 50, 0);
+   peon1 = new ObjRevolucion("plys/peon.ply", 20, 0);
+   peon2 = new ObjRevolucion("plys/peon.ply", 20, 0);
+   peon3 = new ObjRevolucion("plys/peon.ply", 20, 0);
+   peon4 = new ObjRevolucion("plys/peon.ply", 20, 0);
    cilindro1 = new Cilindro(50, 50, 10);
-   cilindro1->setEjeRevolucion('x');
    cono1 = new Cono(50, 30, 10);
    esfera1 = new Esfera(50, 50, 10);
 
@@ -54,6 +55,8 @@ Escena::Escena()
    Material mat3(difuso3, especular3, ambiente3, 0.6*128.0);
    peon1->setMaterial(mat1);
    peon2->setMaterial(mat2);
+   peon3->setMaterial(mat3);
+   peon4->setMaterial(mat1);
    ply1->setMaterial(mat1);
    cubo->setMaterial(mat1);
    tetraedro->setMaterial(mat2);
@@ -102,15 +105,15 @@ void Escena::creacionEscena()
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(65, 100, 0);
-         cubo->setPosicion({65, 100, 0});
+         glTranslatef(50, -70, -250);
+         cubo->setPosicion({50, -70, -250});
          glScalef(0.5, 0.5, 0.5);
          cubo->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(-100, 0, -100);
-         cilindro1->setPosicion({-100, 0, -100});
+         glTranslatef(-200, -30, -100);
+         cilindro1->setPosicion({-200, -30, -100});
          glScalef(3,3,3);
          cilindro1->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
@@ -118,30 +121,38 @@ void Escena::creacionEscena()
       glDisable(GL_TEXTURE_2D);
 
       glPushMatrix();
-         glTranslatef(100, 0, 100);
-         esfera1->setPosicion({100, 0, 100});
+         glTranslatef(-70, -50, 0);
+         esfera1->setPosicion({0, -50, 0});
          glScalef(5,5,5);
          glRotatef(180, 1, 0, 0);
          esfera1->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(145, -90, 250);
+         glTranslatef(145, -90, -250);
+         glScalef(1.3, 1.3, 1.3);
          mol->drawMolino(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(-175, -60, -100);
+         glTranslatef(-200, -60, -100);
          glScalef(0.65, 0.65, 0.65);
-         tetraedro->setPosicion({-175, -60, -100});
+         tetraedro->setPosicion({-200, -60, -100});
          tetraedro->draw(modoDibujado, puntos, lineas, solido);
       glPopMatrix();
       
       glPushMatrix();
-         glTranslatef(0, -50, 0);
+         glTranslatef(70, -50, 0);
          peon1->setPosicion({0, -50, 0});
          glScalef(25.0, 25.0, 25.0);
          peon1->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(140, -50, 0);
+         peon3->setPosicion({140, -50, 0});
+         glScalef(25.0, 25.0, 25.0);
+         peon3->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
 
       glPushMatrix();
@@ -153,10 +164,17 @@ void Escena::creacionEscena()
       glPopMatrix();
 
       glPushMatrix();
-         glTranslatef(100, 0, -100);
-         peon2->setPosicion({100, 0, -100});
+         glTranslatef(210, -50, 0);
+         peon2->setPosicion({210, -50, 0});
          glScalef(25, 25, 25);
          peon2->draw(modoDibujado, puntos, lineas, solido, tapas);
+      glPopMatrix();
+
+      glPushMatrix();
+         glTranslatef(280, -50, 0);
+         peon4->setPosicion({280, -50, 0});
+         glScalef(25, 25, 25);
+         peon4->draw(modoDibujado, puntos, lineas, solido, tapas);
       glPopMatrix();
    glPopMatrix();
 }
@@ -325,7 +343,9 @@ void Escena::coloresOriginales()
    mol->cambiarColor(1.0, 0, 0);
    peon1->cambiarColor(1.0, 0, 0);
    ply1->cambiarColor(1.0, 0, 0);
-   peon2->cambiarColor(1.0, 0, 0);
+   peon2->cambiarColor(0.4, 0.7, 0.9);
+   peon3->cambiarColor(1.0, 0.6, 0.7);
+   peon4->cambiarColor(1.0, 0.7, 0.1);
 }
 
 //**************************************************************************

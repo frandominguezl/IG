@@ -45,6 +45,8 @@ class Escena
     // Objetos de revolución
     ObjRevolucion * peon1 = nullptr;
     ObjRevolucion * peon2 = nullptr;
+    ObjRevolucion * peon3 = nullptr;
+    ObjRevolucion * peon4 = nullptr;
     Cilindro * cilindro1 = nullptr;
     Cono * cono1 = nullptr;
     Esfera * esfera1 = nullptr;
